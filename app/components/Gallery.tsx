@@ -96,7 +96,6 @@ export default function Gallery() {
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 80vw"
-                        unoptimized
                       />
                     </div>
                     <div className="p-5 md:p-6">
