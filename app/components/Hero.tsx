@@ -39,7 +39,7 @@ export default function Hero() {
 
   return (
     <section
-      className="relative pt-8 md:pt-12 pb-12 md:pb-20 overflow-hidden"
+      className="relative pt-[130px] md:pt-[160px] pb-12 md:pb-20 overflow-hidden"
       style={{
         backgroundImage: `url('/images-background-hero/background-hero.png')`,
         backgroundSize: 'cover',
@@ -183,17 +183,17 @@ export default function Hero() {
 
               {/* Floating Card */}
               <div
-                className={`absolute bottom-2 right-2 bg-white rounded-xl shadow-2xl p-2.5 md:p-4 min-w-[120px] md:min-w-[180px] z-10 border border-gray-100 ${mounted ? 'reveal' : 'opacity-0'}`}
+                className={`absolute bottom-2 right-2 bg-white rounded-xl shadow-2xl p-2 md:p-3 min-w-[90px] md:min-w-[140px] z-10 border border-gray-100 ${mounted ? 'reveal' : 'opacity-0'}`}
                 style={{ animationDelay: '0.6s' }}
               >
                 <div className="text-left relative">
-                  <p className="text-[8px] md:text-xs text-[#6B7280] font-semibold mb-0.5 md:mb-1">
+                  <p className="text-[6px] md:text-[10px] text-[#6B7280] font-semibold mb-0.5">
                     Business Growth
                   </p>
-                  <div className="text-[#25D366] text-lg md:text-3xl font-extrabold flex items-center gap-1 mb-0.5 md:mb-1">
-                    <Counter end={300} prefix="+" suffix="%" /> <span className="text-sm md:text-lg">↑</span>
+                  <div className="text-[#25D366] text-sm md:text-xl font-extrabold flex items-center gap-1 mb-0.5">
+                    <Counter end={300} prefix="+" suffix="%" /> <span className="text-xs md:text-sm">↑</span>
                   </div>
-                  <p className="text-[7px] md:text-[10px] text-[#6B7280] mb-1 md:mb-2">
+                  <p className="text-[5px] md:text-[8px] text-[#6B7280] mb-1">
                     Avg. Increase in Leads
                   </p>
                   {/* Mini sparkline */}

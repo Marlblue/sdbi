@@ -98,7 +98,10 @@ export default function Gallery() {
                         sizes="(max-width: 768px) 100vw, 80vw"
                       />
                     </div>
-                    <div className="flex-1 min-h-0 overflow-hidden p-5 md:p-6">
+                    <div className="flex-1 min-h-0 overflow-hidden p-5 md:p-6 flex flex-col">
+                      <h3 className="text-base md:text-lg font-bold text-[#0A1E3F] mb-2 line-clamp-2">
+                        {item.title}
+                      </h3>
                       <p className="text-sm text-[#6B7280] leading-relaxed line-clamp-4">
                         {item.description}
                       </p>
@@ -116,11 +119,10 @@ export default function Gallery() {
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                currentSlide === index
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${currentSlide === index
                   ? 'bg-[#0A1E3F] scale-125'
                   : 'bg-[#0A1E3F]/25 hover:bg-[#0A1E3F]/50'
-              }`}
+                }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

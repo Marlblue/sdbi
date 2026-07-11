@@ -1,50 +1,56 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import MarqueeBar from './MarqueeBar';
 import Navbar from './Navbar';
+import MarqueeBar from './MarqueeBar';
 
 export default function StickyHeader() {
   const [hidden, setHidden] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const lastY = useRef(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const lastScrollY = useRef(0);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    lastY.current = window.scrollY;
+    const handleScroll = () => {
+      if (mobileMenuOpen) return;
 
-    const onScroll = () => {
-      // desktop keeps the header always visible; only mobile hides on scroll
-      if (menuOpen || window.innerWidth >= 768) {
-        setHidden(false);
-        lastY.current = window.scrollY;
-        return;
-      }
+      const currentScrollY = window.scrollY;
+      const scrollingDown = currentScrollY > lastScrollY.current;
 
-      const currentY = window.scrollY;
-      const delta = currentY - lastY.current;
-
-      if (currentY < 80) {
-        setHidden(false);
-      } else if (delta > 4) {
-        setHidden(true);
-      } else if (delta < -4) {
-        setHidden(false);
-      }
-      lastY.current = currentY;
+      setHidden(scrollingDown && currentScrollY > 0);
+      lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [menuOpen]);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [mobileMenuOpen]);
+
+  // Header is fixed (out of document flow), so reserve its height with a
+  // spacer to keep the page content from rendering underneath it.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+
+    const updateHeight = () => setHeaderHeight(el.offsetHeight);
+    updateHeight();
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div
-      className={`sticky top-0 z-50 flex flex-col transition-transform duration-300 ease-out ${
-        hidden ? '-translate-y-full' : 'translate-y-0'
-      }`}
-    >
-      <MarqueeBar />
-      <Navbar onOpenChange={setMenuOpen} />
-    </div>
+    <>
+      <div
+        ref={headerRef}
+        className={`fixed top-0 left-0 right-0 z-[100] flex flex-col transition-transform duration-300 ${hidden ? '-translate-y-full' : 'translate-y-0'
+          }`}
+      >
+        <Navbar className="order-1 md:order-2" onOpenChange={setMobileMenuOpen} />
+        <MarqueeBar className="order-2 md:order-1" />
+      </div>
+      <div style={{ height: headerHeight }} />
+    </>
   );
 }

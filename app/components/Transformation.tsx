@@ -201,13 +201,13 @@ export default function Transformation() {
         {/* Top Section: Left text + Right image */}
         <div className="grid md:grid-cols-2 gap-4 md:gap-8 lg:gap-16 items-start mb-0">
           {/* Left - Title & Button */}
-          <div className="pt-4">
+          <div className="pt-4 text-center md:text-left">
             <h2 className="text-3xl md:text-4xl lg:text-[2.6rem] font-bold leading-tight mb-4">
               <span className="text-[#F5821F] italic">Kisah Transformasi Klien &</span>
               <br />
               <span className="text-[#F5821F] italic">Alumni</span>
             </h2>
-            <p className="text-gray-600 text-sm md:text-base mb-8 leading-relaxed max-w-md">
+            <p className="text-gray-600 text-sm md:text-base mb-8 leading-relaxed max-w-md mx-auto md:mx-0">
               Dampak nyata dari strategi, pelatihan, dan pendampingan SDBI
             </p>
             <button
@@ -228,7 +228,7 @@ export default function Transformation() {
           {/* Right - High-Ticket Closing + Image */}
           <div className="relative md:min-h-[26rem] lg:min-h-[30rem]">
             {/* Text block */}
-            <div className="relative z-10 pt-0">
+            <div className="relative z-10 pt-0 text-center md:text-left">
               <h3 className="text-4xl md:text-5xl lg:text-[3.5rem] font-[900] text-[#0A1E3F] leading-[1.05] mb-3 tracking-tight">
                 High-Ticket
                 <br />
@@ -237,17 +237,17 @@ export default function Transformation() {
                 </span>
               </h3>
 
-              <p className="text-gray-700 italic text-base md:text-lg mt-5 leading-relaxed max-w-xs" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
-                &ldquo;Mengapa Produk Mahal Tidak Butuh &apos;Diskon&apos;, Tapi Butuh &apos;Edukasi&apos;.&rdquo;
+              <p className="text-gray-700 italic text-base md:text-lg mt-5 leading-relaxed max-w-xs mx-auto md:mx-0" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>                &ldquo;Mengapa Produk Mahal Tidak Butuh &apos;Diskon&apos;, Tapi Butuh &apos;Edukasi&apos;.&rdquo;
               </p>
+
             </div>
-            {/* Coach Yoso Image - stacked below text on mobile; on md+ positioned so built-in arrow points to quote text */}
-            <div className="relative w-[68%] aspect-[1366/1614] mx-auto -mt-2 md:mx-0 md:absolute md:mt-0 md:right-[-2rem] lg:right-[-1rem] md:top-[-1rem] md:w-[65%] lg:w-[62%] md:aspect-auto md:h-[calc(100%+2rem)] z-[5]">
+            {/* Coach Yoso Image - stacked below text on mobile; on md+ fills the space below the quote down to the thumbnails */}
+            <div className="relative w-[56%] aspect-[1366/1614] mx-auto mt-4 md:mx-0 md:absolute md:mt-0 md:left-[3.5rem] lg:left-[1.5rem] md:top-[6rem] lg:top-[6.5rem] md:bottom-0 md:w-[40%] lg:w-[36%] md:aspect-auto z-[5]">
               <Image
                 src="/image-transformation/image.png"
                 alt="Coach Yoso - High Ticket Closing"
                 fill
-                className="object-contain object-top md:object-right-top"
+                className="object-contain object-bottom"
                 sizes="(max-width: 768px) 70vw, (max-width: 1024px) 38vw, 32vw"
               />
             </div>
@@ -255,7 +255,7 @@ export default function Transformation() {
         </div>
 
         {/* Testimonial Thumbnail Carousel */}
-        <div className="relative z-20 -mt-8 md:-mt-14 px-12 md:px-14">
+        <div className="relative z-20 -mt-2 md:-mt-14 px-12 md:px-14">
           {/* Left Arrow Button */}
           <button
             onClick={prev}

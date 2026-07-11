@@ -102,7 +102,7 @@ export default function Navbar({ className = '', onOpenChange }: NavbarProps) {
           </div>
 
           {/* Menu Desktop & CTA */}
-          <div className="hidden md:flex items-center">
+          <div className="hidden lg:flex items-center">
             <div className="flex items-center space-x-6">
               {menuItems.map((item) => (
                 <Link
@@ -123,10 +123,10 @@ export default function Navbar({ className = '', onOpenChange }: NavbarProps) {
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile/tablet hamburger */}
           <button
             ref={hamburgerRef}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
             onClick={() => toggleMobile(!mobileOpen)}
             aria-label="Toggle menu"
             aria-expanded={mobileOpen}
@@ -148,7 +148,7 @@ export default function Navbar({ className = '', onOpenChange }: NavbarProps) {
 
         {/* Mobile full-screen menu */}
         {mounted && mobileOpen && createPortal(
-          <div className="md:hidden fixed inset-0 z-[9999] bg-white/70 backdrop-blur-md">
+          <div className="lg:hidden fixed inset-0 z-[9999] bg-white/70 backdrop-blur-md">
             <button
               className="fixed p-2 rounded-lg hover:bg-gray-100 transition-colors"
               style={{ top: closeBtnPos.top, right: closeBtnPos.right }}
