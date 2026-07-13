@@ -1,21 +1,92 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { countries } from './countryCodes';
+
+const layananLabels: Record<string, string> = {
+  'digital-marketing': 'Digital Marketing Management',
+  seo: 'SEO & AI Search Optimization',
+  ads: 'Digital Ads Management',
+  training: 'Corporate Training & Workshop',
+  consulting: 'Business & Digital Consulting',
+  webdev: 'Website Development',
+  speaker: 'Speaker & Corporate Event',
+  mpp: 'Program Masa Persiapan Pensiun (MPP)',
+};
+
+const harapanLabels: Record<string, string> = {
+  revenue: 'Meningkatkan Revenue',
+  leads: 'Meningkatkan Leads',
+  brand: 'Meningkatkan Brand Awareness',
+  skills: 'Meningkatkan Kompetensi Tim',
+  other: 'Lainnya',
+};
+
+const sumberLabels: Record<string, string> = {
+  google: 'Google Search',
+  instagram: 'Instagram',
+  tiktok: 'TikTok',
+  linkedin: 'LinkedIn',
+  referral: 'Rekomendasi',
+  other: 'Lainnya',
+};
 
 export default function CTAForm() {
   const [formData, setFormData] = useState({
     nama: '',
     email: '',
+    countryCode: 'ID',
     phone: '',
     layanan: '',
     harapan: '',
     sumber: '',
   });
 
+  const [countryOpen, setCountryOpen] = useState(false);
+  const countryRef = useRef<HTMLDivElement>(null);
+  const selectedCountry =
+    countries.find((c) => c.iso2 === formData.countryCode) ?? countries.find((c) => c.iso2 === 'ID')!;
+
+  useEffect(() => {
+    if (!countryOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (countryRef.current && !countryRef.current.contains(e.target as Node)) {
+        setCountryOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [countryOpen]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const message = `Halo SDBI, saya ${formData.nama}.\nEmail: ${formData.email}\nNo HP: ${formData.phone}\nLayanan: ${formData.layanan}\nHarapan: ${formData.harapan}\nMengetahui dari: ${formData.sumber}`;
+
+    const nama = formData.nama.trim();
+    const email = formData.email.trim();
+    const phoneDigits = formData.phone.replace(/\D/g, '').replace(/^0+/, '');
+
+    if (!nama || !email || !phoneDigits || !formData.layanan) {
+      return;
+    }
+
+    const country = countries.find((c) => c.iso2 === formData.countryCode) ?? countries.find((c) => c.iso2 === 'ID')!;
+    const fullPhone = `+${country.dial}${phoneDigits}`;
+
+    const lines = [
+      `Halo SDBI, saya ${nama}.`,
+      `Email: ${email}`,
+      `No HP: ${fullPhone}`,
+      `Layanan: ${layananLabels[formData.layanan] ?? formData.layanan}`,
+    ];
+    if (formData.harapan) {
+      lines.push(`Harapan: ${harapanLabels[formData.harapan] ?? formData.harapan}`);
+    }
+    if (formData.sumber) {
+      lines.push(`Mengetahui dari: ${sumberLabels[formData.sumber] ?? formData.sumber}`);
+    }
+
+    const message = lines.join('\n');
     const waUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
   };
@@ -81,14 +152,62 @@ export default function CTAForm() {
 
                 {/* Phone */}
                 <div className="relative flex items-center border-b-2 border-gray-200 focus-within:border-[#0A1E3F] transition-colors">
-                  <span className="text-sm text-gray-500 mr-2 flex items-center gap-1 py-3">
-                    🇮🇩 • +62
-                  </span>
+                  <div className="relative shrink-0" ref={countryRef}>
+                    <button
+                      type="button"
+                      onClick={() => setCountryOpen((o) => !o)}
+                      className="flex items-center gap-1.5 py-3 pl-1 pr-3 text-sm text-gray-600 outline-none cursor-pointer"
+                      aria-label="Pilih kode negara"
+                      aria-expanded={countryOpen}
+                    >
+                      <img
+                        src={`https://flagcdn.com/${selectedCountry.iso2.toLowerCase()}.svg`}
+                        alt={selectedCountry.name}
+                        className="w-5 h-3.5 object-cover rounded-sm shrink-0"
+                      />
+                      <span>+{selectedCountry.dial}</span>
+                      <svg
+                        className={`w-3 h-3 text-gray-300 transition-transform ${countryOpen ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {countryOpen && (
+                      <div className="absolute z-20 top-full left-0 mt-2 w-64 max-h-64 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg py-1">
+                        {countries.map((c) => (
+                          <button
+                            key={c.iso2}
+                            type="button"
+                            onClick={() => {
+                              setFormData({ ...formData, countryCode: c.iso2 });
+                              setCountryOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-gray-50 ${
+                              c.iso2 === formData.countryCode ? 'bg-gray-50' : ''
+                            }`}
+                          >
+                            <img
+                              src={`https://flagcdn.com/${c.iso2.toLowerCase()}.svg`}
+                              alt={c.name}
+                              className="w-5 h-3.5 object-cover rounded-sm shrink-0"
+                            />
+                            <span className="flex-1 truncate text-gray-700">{c.name}</span>
+                            <span className="text-gray-400">+{c.dial}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   <input
                     type="tel"
-                    placeholder=""
+                    inputMode="numeric"
+                    placeholder="8123456789"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/[^\d]/g, '') })}
                     className="flex-1 py-3 px-1 text-sm outline-none placeholder:text-gray-400 border-none"
                     required
                   />
