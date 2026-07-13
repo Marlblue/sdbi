@@ -242,7 +242,7 @@ export default function Transformation() {
 
             </div>
             {/* Coach Yoso Image - stacked below text on mobile; on md+ fills the space below the quote down to the thumbnails */}
-            <div className="relative w-[56%] aspect-[1366/1614] mx-auto mt-4 md:mx-0 md:absolute md:mt-0 md:left-[3.5rem] lg:left-[1.5rem] md:top-[6rem] lg:top-[6.5rem] md:bottom-0 md:w-[40%] lg:w-[36%] md:aspect-auto z-[5]">
+            <div className="relative w-[56%] aspect-[1366/1614] mx-auto mt-4 md:mx-0 md:absolute md:mt-0 md:left-[3.5rem] lg:left-[1.5rem] md:top-[6rem] lg:top-[6.5rem] md:bottom-[3rem] lg:bottom-0 md:w-[40%] lg:w-[36%] md:aspect-auto z-[5]">
               <Image
                 src="/image-transformation/image.png"
                 alt="Coach Yoso - High Ticket Closing"

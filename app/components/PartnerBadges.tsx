@@ -25,7 +25,7 @@ export default function PartnerBadges() {
                   alt={partner.name}
                   width={150}
                   height={56}
-                  className="object-contain h-full w-auto max-w-full"
+                  style={{ width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '100%' }}
                 />
               </div>
             ))}
