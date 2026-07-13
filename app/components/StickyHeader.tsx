@@ -12,27 +12,35 @@ export default function StickyHeader() {
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      if (mobileMenuOpen) return;
+      if (ticking) return;
+      ticking = true;
 
-      // Keep the header always visible on desktop; only auto-hide on mobile.
-      if (window.innerWidth >= 768) {
-        setHidden(false);
-        lastScrollY.current = window.scrollY;
-        return;
-      }
+      requestAnimationFrame(() => {
+        ticking = false;
+        if (mobileMenuOpen) return;
 
-      const currentScrollY = window.scrollY;
-      const delta = currentScrollY - lastScrollY.current;
+        // Keep the header always visible on desktop; only auto-hide on mobile.
+        if (window.innerWidth >= 768) {
+          setHidden(false);
+          lastScrollY.current = window.scrollY;
+          return;
+        }
 
-      if (currentScrollY <= 0 || delta < -5) {
-        // Any upward movement (or being back at the top) reveals the header instantly.
-        setHidden(false);
-      } else if (delta > 5 && currentScrollY > headerHeight) {
-        setHidden(true);
-      }
+        const currentScrollY = window.scrollY;
+        const delta = currentScrollY - lastScrollY.current;
 
-      lastScrollY.current = currentScrollY;
+        if (currentScrollY <= 0 || delta < -5) {
+          // Any upward movement (or being back at the top) reveals the header instantly.
+          setHidden(false);
+        } else if (delta > 5 && currentScrollY > headerHeight) {
+          setHidden(true);
+        }
+
+        lastScrollY.current = currentScrollY;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -57,7 +65,7 @@ export default function StickyHeader() {
     <>
       <div
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-[100] flex flex-col transition-transform duration-150 ease-out ${hidden ? '-translate-y-full' : 'translate-y-0'
+        className={`fixed top-0 left-0 right-0 z-[100] flex flex-col transition-transform duration-150 ease-out will-change-transform ${hidden ? '-translate-y-full' : 'translate-y-0'
           }`}
       >
         <Navbar className="order-1 md:order-2" onOpenChange={setMobileMenuOpen} />
