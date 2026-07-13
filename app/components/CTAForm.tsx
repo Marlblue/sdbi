@@ -26,7 +26,7 @@ export default function CTAForm() {
         <div className="bg-[#1C1C1C] rounded-3xl overflow-hidden">
           <div className="grid md:grid-cols-2 gap-0">
             {/* Left - CTA Text + People Image */}
-            <div className="p-8 md:p-12 lg:p-14 flex flex-col justify-center">
+            <div className="min-w-0 p-8 md:p-12 lg:p-14 flex flex-col justify-center">
               <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight mb-8">
                 Siap untuk raih{' '}
                 <span className="text-[#FFD54F] font-extrabold">karir<br />digital</span>{' '}
@@ -47,7 +47,7 @@ export default function CTAForm() {
             </div>
 
             {/* Right - Form */}
-            <div className="bg-white p-8 md:p-10 lg:p-12 rounded-t-3xl md:rounded-t-none md:rounded-r-3xl flex flex-col justify-center">
+            <div className="min-w-0 bg-white p-8 md:p-10 lg:p-12 rounded-t-3xl md:rounded-t-none md:rounded-r-3xl flex flex-col justify-center">
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Nama */}
                 <div className="relative">
