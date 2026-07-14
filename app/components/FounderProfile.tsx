@@ -24,7 +24,7 @@ export default function FounderProfile() {
           {/* Left - Photo (no card, directly on background) */}
           <div className="md:col-span-5">
             <Image
-              src="/iamges-founder-profile/coach-yoso-lukito.png"
+              src="/images-founder-profile/coach-yoso-lukito.png"
               alt="Coach Yoso Lukito - Founder & CEO SDBI"
               width={700}
               height={500}
@@ -65,7 +65,7 @@ export default function FounderProfile() {
               href="#konsultasi"
               className="inline-block bg-[#0A1E3F] text-white px-8 py-3.5 rounded-xl font-medium hover:bg-[#0A1E3F]/90 transition-colors text-sm"
             >
-              Cek Profile Lengkap
+              Cek Profile Lengkap & Portofolio
             </Link>
           </div>
 

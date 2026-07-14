@@ -117,7 +117,7 @@ export default function Hero() {
             >
               <div className="w-1.5 h-1.5 bg-[#F5821F] rounded-full"></div>
               <span className="text-[#F5821F] font-semibold text-xs uppercase tracking-wider">
-                Digital Marketing Agency
+                The partner of digital Marketing
               </span>
             </div>
 
