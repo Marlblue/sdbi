@@ -15,15 +15,15 @@ interface MarqueeBarProps {
 
 const defaultItems: MarqueeItem[] = [
   {
-    text: 'Promo Konsultasi Gratis berlaku hingga 31 Juli 2026',
+    text: 'Konsultasi Bisnis Gratis',
     cta: { label: 'Konsultasi Sekarang', href: '#konsultasi' },
   },
   {
-    text: 'Program MPP Batch Baru Segera Dibuka',
+    text: 'Media Social Specialist Academy',
     cta: { label: 'Lihat Program', href: '#layanan' },
   },
   {
-    text: '500+ Perusahaan & Institusi Sudah Bergabung',
+    text: 'Pembicara',
     cta: { label: 'Hubungi Kami', href: '#hubungi-kami' },
   },
 ];

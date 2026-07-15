@@ -125,7 +125,7 @@ export default function Navbar({ className = '', onOpenChange }: NavbarProps) {
 
             <Link
               href="#konsultasi"
-              className="bg-[#0A1E3F] text-white px-6 py-2.5 rounded-xl font-medium hover:bg-[#0A1E3F]/90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-sm shadow-md whitespace-nowrap ml-4"
+              className="animate-cta-pulse bg-[#0A1E3F] text-white px-6 py-2.5 rounded-xl font-medium hover:bg-[#0A1E3F]/90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-sm shadow-md whitespace-nowrap ml-4"
             >
               Konsultasi Sekarang
             </Link>
@@ -185,7 +185,7 @@ export default function Navbar({ className = '', onOpenChange }: NavbarProps) {
               <div className="pt-6">
                 <Link
                   href="#konsultasi"
-                  className="block bg-[#0A1E3F] text-white px-6 py-3.5 rounded-xl font-medium text-center hover:bg-[#0A1E3F]/90 transition-colors text-sm shadow-md"
+                  className="animate-cta-pulse block bg-[#0A1E3F] text-white px-6 py-3.5 rounded-xl font-medium text-center hover:bg-[#0A1E3F]/90 transition-colors text-sm shadow-md"
                   onClick={() => toggleMobile(false)}
                 >
                   Konsultasi Sekarang

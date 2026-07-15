@@ -1,10 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 export default function Gallery() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(3);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerView(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(3);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const galleryItems = [
     {
@@ -39,10 +55,43 @@ export default function Gallery() {
     },
   ];
 
-  const totalSlides = galleryItems.length;
+  const maxSlide = Math.max(0, galleryItems.length - itemsPerView);
+  const totalPages = Math.ceil(galleryItems.length / itemsPerView);
+  const currentPage = Math.min(Math.floor(currentSlide / itemsPerView), totalPages - 1);
 
-  const prev = () => setCurrentSlide((s) => (s === 0 ? totalSlides - 1 : s - 1));
-  const next = () => setCurrentSlide((s) => (s === totalSlides - 1 ? 0 : s + 1));
+  const prev = () => setCurrentSlide((s) => Math.max(0, s - itemsPerView));
+  const next = () => setCurrentSlide((s) => Math.min(maxSlide, s + itemsPerView));
+
+  // Swipe support for mobile
+  const touchStartX = useRef(0);
+  const touchDeltaX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchDeltaX.current = 0;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeThreshold = 40;
+    if (touchDeltaX.current < -swipeThreshold) {
+      next();
+    } else if (touchDeltaX.current > swipeThreshold) {
+      prev();
+    }
+    touchDeltaX.current = 0;
+  };
+
+  // Fixed width for each card based on itemsPerView
+  const cardWidthClass =
+    itemsPerView === 1
+      ? 'w-full'
+      : itemsPerView === 2
+        ? 'w-[calc(50%-8px)]'
+        : 'w-[calc(33.333%-11px)]';
 
   return (
     <section className="bg-[#D1ECFA] py-16 md:py-24">
@@ -52,54 +101,59 @@ export default function Gallery() {
         </h2>
 
         {/* Carousel */}
-        <div className="relative px-12 md:px-14">
-          {/* Navigation Buttons */}
+        <div className="relative px-0 md:px-14">
+          {/* Navigation Buttons (desktop only) */}
           <button
             onClick={prev}
-            className="absolute left-0 top-[45%] -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors"
+            disabled={currentSlide === 0}
+            className="hidden md:flex absolute left-0 top-[45%] -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-full items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Slide sebelumnya"
           >
-            <svg className="w-5 h-5 md:w-6 md:h-6 text-[#0A1E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-[#0A1E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
           <button
             onClick={next}
-            className="absolute right-0 top-[45%] -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors"
+            disabled={currentSlide >= maxSlide}
+            className="hidden md:flex absolute right-0 top-[45%] -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-full items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Slide selanjutnya"
           >
-            <svg className="w-5 h-5 md:w-6 md:h-6 text-[#0A1E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-[#0A1E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
 
-          {/* Single Image Slide */}
-          <div className="overflow-hidden rounded-2xl">
+          {/* Card Slides */}
+          <div
+            className="overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
-              className="flex transition-transform duration-500 ease-out"
-              style={{
-                transform: `translateX(-${currentSlide * 100}%)`,
-              }}
+              className="flex gap-4 transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(calc(-${currentSlide * (100 / itemsPerView)}% - ${currentSlide * (16 / itemsPerView)}px))` }}
             >
               {galleryItems.map((item, index) => (
                 <div
                   key={index}
-                  className="w-full flex-shrink-0"
+                  className={`${cardWidthClass} flex-shrink-0`}
                 >
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-sm h-[30rem] sm:h-[32rem] md:h-[40rem] flex flex-col">
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-sm h-full flex flex-col">
                     {/* Image */}
-                    <div className="relative h-72 sm:h-80 md:h-[28rem] flex-shrink-0 overflow-hidden bg-gray-100">
+                    <div className="relative h-48 md:h-56 flex-shrink-0 overflow-hidden bg-gray-100">
                       <Image
                         src={item.image}
                         alt={`Galeri Kegiatan ${item.title}`}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 80vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                     </div>
-                    <div className="flex-1 min-h-0 overflow-hidden p-5 md:p-6 flex flex-col">
-                      <h3 className="text-base md:text-lg font-bold text-[#0A1E3F] mb-2 line-clamp-2">
+                    <div className="flex-1 min-h-0 overflow-hidden p-5 flex flex-col">
+                      <h3 className="text-base font-bold text-[#0A1E3F] mb-2 line-clamp-2">
                         {item.title}
                       </h3>
                       <p className="text-sm text-[#6B7280] leading-relaxed line-clamp-4">
@@ -115,15 +169,15 @@ export default function Gallery() {
 
         {/* Dot Indicators */}
         <div className="flex justify-center gap-2 mt-6">
-          {galleryItems.map((_, index) => (
+          {Array.from({ length: totalPages }).map((_, i) => (
             <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${currentSlide === index
+              key={i}
+              onClick={() => setCurrentSlide(Math.min(i * itemsPerView, maxSlide))}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${currentPage === i
                   ? 'bg-[#0A1E3F] scale-125'
                   : 'bg-[#0A1E3F]/25 hover:bg-[#0A1E3F]/50'
                 }`}
-              aria-label={`Go to slide ${index + 1}`}
+              aria-label={`Go to page ${i + 1}`}
             />
           ))}
         </div>

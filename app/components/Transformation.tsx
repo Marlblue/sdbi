@@ -1,13 +1,19 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Transformation() {
   // null = no modal, number = index of active video
   const [activeVideo, setActiveVideo] = useState<number | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(4);
+
+  // Hide the floating WhatsApp button while the video modal is open
+  useEffect(() => {
+    document.body.classList.toggle('video-modal-open', activeVideo !== null);
+    return () => document.body.classList.remove('video-modal-open');
+  }, [activeVideo]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -175,6 +181,29 @@ export default function Transformation() {
   const prev = () => setCurrentSlide((s) => Math.max(0, s - itemsPerView));
   const next = () => setCurrentSlide((s) => Math.min(maxSlide, s + itemsPerView));
 
+  // Swipe support for mobile
+  const touchStartX = useRef(0);
+  const touchDeltaX = useRef(0);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchDeltaX.current = 0;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+  };
+
+  const handleTouchEnd = () => {
+    const swipeThreshold = 40;
+    if (touchDeltaX.current < -swipeThreshold) {
+      next();
+    } else if (touchDeltaX.current > swipeThreshold) {
+      prev();
+    }
+    touchDeltaX.current = 0;
+  };
+
   // Fixed width for each card based on itemsPerView
   const cardWidthClass =
     itemsPerView === 2
@@ -255,33 +284,38 @@ export default function Transformation() {
         </div>
 
         {/* Testimonial Thumbnail Carousel */}
-        <div className="relative z-20 -mt-2 md:-mt-14 px-12 md:px-14">
-          {/* Left Arrow Button */}
+        <div className="relative z-20 -mt-2 md:-mt-14 px-0 md:px-14">
+          {/* Left Arrow Button (desktop only) */}
           <button
             onClick={prev}
             disabled={currentSlide === 0}
-            className="absolute left-0 top-[45%] -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="hidden md:flex absolute left-0 top-[45%] -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-full items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Slide sebelumnya"
           >
-            <svg className="w-5 h-5 md:w-6 md:h-6 text-[#0A1E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-[#0A1E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
-          {/* Right Arrow Button */}
+          {/* Right Arrow Button (desktop only) */}
           <button
             onClick={next}
             disabled={currentSlide >= maxSlide}
-            className="absolute right-0 top-[45%] -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="hidden md:flex absolute right-0 top-[45%] -translate-y-1/2 z-10 w-12 h-12 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] rounded-full items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             aria-label="Slide selanjutnya"
           >
-            <svg className="w-5 h-5 md:w-6 md:h-6 text-[#0A1E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-[#0A1E3F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
 
           {/* Cards Container */}
-          <div className="overflow-hidden py-4">
+          <div
+            className="overflow-hidden py-4"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div
               className="flex gap-4 transition-transform duration-500 ease-out"
               style={{ transform: `translateX(calc(-${currentSlide * (100 / itemsPerView)}% - ${currentSlide * (16 / itemsPerView)}px))` }}
@@ -339,7 +373,7 @@ export default function Transformation() {
       {/* YouTube Shorts Video Modal */}
       {activeVideo !== null && (
         <div
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-[110] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setActiveVideo(null)}
         >
           <div
@@ -348,12 +382,12 @@ export default function Transformation() {
           >
             <button
               onClick={() => setActiveVideo(null)}
-              className="absolute -top-12 right-0 z-10 text-white/80 hover:text-white text-sm font-medium flex items-center gap-2 transition-colors"
+              aria-label="Tutup video"
+              className="absolute top-3 right-3 z-20 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-              Tutup
             </button>
             <iframe
               src={`https://www.youtube.com/embed/${testimonials[activeVideo].youtubeId}?autoplay=1&rel=0`}

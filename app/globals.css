@@ -22,7 +22,8 @@ body {
   font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
 }
 
-/* Smooth scroll */
+/* Smooth scroll (JS-driven scroll from StickyHeader also passes
+   behavior: 'smooth', this covers any native fragment navigation) */
 html {
   scroll-behavior: smooth;
 }
@@ -87,6 +88,11 @@ html {
   100% { transform: translateX(-50%); }
 }
 
+@keyframes ctaPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
 }
@@ -109,6 +115,14 @@ html {
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+.animate-cta-pulse {
+  animation: ctaPulse 2s ease-in-out infinite;
+}
+
+.animate-cta-pulse:hover {
+  animation-play-state: paused;
 }
 
 .animate-marquee {
@@ -174,6 +188,10 @@ html {
 .whatsapp-float:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+}
+
+body.video-modal-open .whatsapp-float {
+  display: none;
 }
 
 /* Custom utilities */

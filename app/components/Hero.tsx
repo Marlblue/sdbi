@@ -115,7 +115,10 @@ export default function Hero() {
               className={`flex items-center space-x-2 ${mounted ? 'reveal' : 'opacity-0'}`}
               style={{ animationDelay: '0.05s' }}
             >
-              <div className="w-1.5 h-1.5 bg-[#F5821F] rounded-full"></div>
+              <span className="relative flex w-1.5 h-1.5">
+                <span className="animate-ping absolute inline-flex w-full h-full rounded-full bg-[#F5821F] opacity-75"></span>
+                <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-[#F5821F]"></span>
+              </span>
               <span className="text-[#F5821F] font-semibold text-xs uppercase tracking-wider">
                 The partner of digital Marketing
               </span>

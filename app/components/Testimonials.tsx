@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
 // 6 avatar images from /avatar-testimonials/
@@ -23,6 +23,8 @@ export default function Testimonials() {
   ];
 
   const [activeTab, setActiveTab] = useState(0);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   const testimonials: Record<number, Array<{
     name: string;
@@ -222,6 +224,28 @@ export default function Testimonials() {
     ],
   };
 
+  const activeTestimonials = testimonials[activeTab] || [];
+
+  // Reset slider position when switching tabs
+  useEffect(() => {
+    setActiveSlide(0);
+    sliderRef.current?.scrollTo({ left: 0, behavior: 'auto' });
+  }, [activeTab]);
+
+  const handleSliderScroll = () => {
+    const el = sliderRef.current;
+    if (!el) return;
+    const index = Math.round(el.scrollLeft / el.clientWidth);
+    setActiveSlide(index);
+  };
+
+  const goToSlide = (index: number) => {
+    const el = sliderRef.current;
+    if (!el) return;
+    el.scrollTo({ left: index * el.clientWidth, behavior: 'smooth' });
+    setActiveSlide(index);
+  };
+
   return (
     <section className="bg-white py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -251,12 +275,16 @@ export default function Testimonials() {
           ))}
         </div>
 
-        {/* Testimonial Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {(testimonials[activeTab] || []).map((item, index) => (
+        {/* Testimonial Slider (mobile) / Grid (desktop) */}
+        <div
+          ref={sliderRef}
+          onScroll={handleSliderScroll}
+          className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scroll-smooth -mx-4 px-4 md:mx-0 md:px-0 pb-2 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        >
+          {activeTestimonials.map((item, index) => (
             <div
               key={index}
-              className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
+              className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 shrink-0 w-full snap-center md:shrink md:w-auto"
             >
               {/* Avatar & Name */}
               <div className="flex items-center gap-4 mb-4">
@@ -280,6 +308,20 @@ export default function Testimonials() {
                 {item.quote}
               </p>
             </div>
+          ))}
+        </div>
+
+        {/* Slide dots (mobile only) */}
+        <div className="flex md:hidden justify-center gap-2 mt-5">
+          {activeTestimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              aria-label={`Ke testimoni ${index + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                activeSlide === index ? 'w-6 bg-[#0A1E3F]' : 'w-2 bg-gray-300'
+              }`}
+            />
           ))}
         </div>
       </div>
