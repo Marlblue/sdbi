@@ -7,7 +7,7 @@
  * SETUP:
  * 1. Buat Google Sheet baru
  * 2. Rename sheet pertama jadi "ChatLeads"
- * 3. Buat header di baris 1: Timestamp | Nama | Nomor HP | Pesan | Halaman | Status
+ * 3. Buat header di baris 1: Timestamp | Nama | Nomor HP | Email | Layanan | Mengetahui Dari | Halaman | Status
  * 4. Buka Extensions → Apps Script
  * 5. Hapus semua kode default, paste seluruh kode ini
  * 6. Ganti ADMIN_EMAIL di bawah dengan email admin SDBI
@@ -42,21 +42,25 @@ function doPost(e) {
     var timestamp = data.timestamp || new Date().toISOString();
     var nama = data.nama || '-';
     var phone = data.phone || '-';
-    var message = data.message || '';
+    var email = data.email || '-';
+    var layanan = data.layanan || '-';
+    var sumber = data.sumber || '-';
     var page = data.page || '/';
 
-    sheet.appendRow([timestamp, nama, phone, message, page, 'Baru']);
+    sheet.appendRow([timestamp, nama, phone, email, layanan, sumber, page, 'Baru']);
 
     // Kirim email notifikasi ke admin
-    var subject = '💬 Pesan Baru dari Website SDBI';
+    var subject = '💬 Lead Baru dari Website SDBI';
     var body = [
-      'Ada pesan baru dari chat widget website SDBI!\n',
+      'Ada pesan/form baru dari website SDBI!\n',
       '━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-      'Waktu   : ' + timestamp,
-      'Nama    : ' + nama,
-      'No HP   : ' + phone,
-      'Pesan   : ' + message,
-      'Halaman : ' + page,
+      'Waktu           : ' + timestamp,
+      'Nama            : ' + nama,
+      'No HP           : ' + phone,
+      'Email           : ' + email,
+      'Layanan         : ' + layanan,
+      'Mengetahui Dari : ' + sumber,
+      'Halaman         : ' + page,
       '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n',
       'Buka spreadsheet untuk melihat semua pesan:',
       SpreadsheetApp.getActiveSpreadsheet().getUrl(),

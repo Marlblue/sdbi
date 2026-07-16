@@ -15,14 +15,6 @@ const layananLabels: Record<string, string> = {
   mpp: 'Program Masa Persiapan Pensiun (MPP)',
 };
 
-const harapanLabels: Record<string, string> = {
-  revenue: 'Meningkatkan Revenue',
-  leads: 'Meningkatkan Leads',
-  brand: 'Meningkatkan Brand Awareness',
-  skills: 'Meningkatkan Kompetensi Tim',
-  other: 'Lainnya',
-};
-
 const sumberLabels: Record<string, string> = {
   google: 'Google Search',
   instagram: 'Instagram',
@@ -39,11 +31,12 @@ export default function CTAForm() {
     countryCode: 'ID',
     phone: '',
     layanan: '',
-    harapan: '',
     sumber: '',
   });
 
   const [errors, setErrors] = useState<{ nama?: string; email?: string; phone?: string; layanan?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const [countryOpen, setCountryOpen] = useState(false);
   const countryRef = useRef<HTMLDivElement>(null);
@@ -65,8 +58,9 @@ export default function CTAForm() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [countryOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
     const nama = formData.nama.trim();
     const email = formData.email.trim();
@@ -98,22 +92,29 @@ export default function CTAForm() {
     const country = countries.find((c) => c.iso2 === formData.countryCode) ?? countries.find((c) => c.iso2 === 'ID')!;
     const fullPhone = `+${country.dial}${phoneDigits}`;
 
-    const lines = [
-      `Halo SDBI, saya ${nama}.`,
-      `Email: ${email}`,
-      `No HP: ${fullPhone}`,
-      `Layanan: ${layananLabels[formData.layanan] ?? formData.layanan}`,
-    ];
-    if (formData.harapan) {
-      lines.push(`Harapan: ${harapanLabels[formData.harapan] ?? formData.harapan}`);
-    }
-    if (formData.sumber) {
-      lines.push(`Mengetahui dari: ${sumberLabels[formData.sumber] ?? formData.sumber}`);
-    }
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/chat-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nama,
+          phone: fullPhone,
+          page: window.location.pathname,
+          email,
+          layanan: layananLabels[formData.layanan] ?? formData.layanan,
+          sumber: formData.sumber ? (sumberLabels[formData.sumber] ?? formData.sumber) : '-',
+        }),
+      });
 
-    const message = lines.join('\n');
-    const waUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
-    window.open(waUrl, '_blank');
+      if (!res.ok) throw new Error('failed');
+      
+      setIsSuccess(true);
+    } catch (err) {
+      alert('Maaf, terjadi kesalahan saat mengirim data. Silakan coba lagi.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -143,8 +144,37 @@ export default function CTAForm() {
 
             {/* Right - Form */}
             <div className="min-w-0 bg-white p-8 md:p-10 lg:p-12 rounded-t-3xl md:rounded-t-none md:rounded-r-3xl flex flex-col justify-center">
-              <form onSubmit={handleSubmit} noValidate className="space-y-5">
-                {/* Nama */}
+              {isSuccess ? (
+                <div className="text-center py-10 animate-[fadeIn_0.5s_ease-out]">
+                  <div className="w-16 h-16 bg-[#DCF8C6] rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-8 h-8 text-[#25D366]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Terima Kasih!</h3>
+                  <p className="text-gray-600 mb-8 leading-relaxed">
+                    Data Anda telah berhasil dikirim. Tim SDBI akan segera menghubungi Anda melalui WhatsApp atau Email.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsSuccess(false);
+                      setFormData({
+                        nama: '',
+                        email: '',
+                        countryCode: 'ID',
+                        phone: '',
+                        layanan: '',
+                        sumber: '',
+                      });
+                    }}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-xl font-semibold transition-colors"
+                  >
+                    Kirim Data Lainnya
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                  {/* Nama */}
                 <div className="relative">
                   <input
                     ref={namaRef}
@@ -278,25 +308,6 @@ export default function CTAForm() {
                   {errors.layanan && <p className="mt-1 text-xs text-red-500">{errors.layanan}</p>}
                 </div>
 
-                {/* Dropdown - Harapan */}
-                <div className="relative">
-                  <select
-                    value={formData.harapan}
-                    onChange={(e) => setFormData({ ...formData, harapan: e.target.value })}
-                    className="w-full border-b-2 border-gray-200 focus:border-[#0A1E3F] py-3 px-1 text-sm outline-none transition-colors text-gray-400 bg-transparent appearance-none"
-                  >
-                    <option value="">Apa yang di harapkan</option>
-                    <option value="revenue">Meningkatkan Revenue</option>
-                    <option value="leads">Meningkatkan Leads</option>
-                    <option value="brand">Meningkatkan Brand Awareness</option>
-                    <option value="skills">Meningkatkan Kompetensi Tim</option>
-                    <option value="other">Lainnya</option>
-                  </select>
-                  <svg className="absolute right-2 top-3 w-5 h-5 text-gray-300 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-
                 {/* Dropdown - Sumber */}
                 <div className="relative">
                   <select
@@ -320,11 +331,23 @@ export default function CTAForm() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="w-full bg-[#25D366] hover:bg-[#20BD5A] text-white py-4 rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2 mt-2"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#0A1E3F] hover:bg-[#1A365D] disabled:opacity-70 text-white py-4 rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2 mt-2"
                 >
-                  Kirim via WhatsApp
+                  {isSubmitting ? (
+                    <>
+                      <svg className="w-5 h-5 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Mengirim...
+                    </>
+                  ) : (
+                    'Kirim Data'
+                  )}
                 </button>
               </form>
+              )}
             </div>
           </div>
         </div>

@@ -10,19 +10,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: { message?: unknown; page?: unknown; nama?: unknown; phone?: unknown };
+  let body: { page?: unknown; nama?: unknown; phone?: unknown; email?: unknown; layanan?: unknown; sumber?: unknown };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: 'Payload tidak valid.' }, { status: 400 });
   }
 
-  const message = typeof body.message === 'string' ? body.message.trim() : '';
-  if (!message) {
-    return NextResponse.json({ error: 'Pesan tidak boleh kosong.' }, { status: 400 });
-  }
-
   const nama = typeof body.nama === 'string' ? body.nama.trim() : '';
+  if (!nama) {
+    return NextResponse.json({ error: 'Nama tidak boleh kosong.' }, { status: 400 });
+  }
   const phone = typeof body.phone === 'string' ? body.phone.trim() : '';
 
   try {
@@ -30,11 +28,13 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message,
         nama: nama || '-',
         phone: phone || '-',
         page: typeof body.page === 'string' ? body.page : '',
         timestamp: new Date().toISOString(),
+        email: typeof body.email === 'string' ? body.email : '',
+        layanan: typeof body.layanan === 'string' ? body.layanan : '',
+        sumber: typeof body.sumber === 'string' ? body.sumber : '',
       }),
       // Vercel Kadang rewel dengan redirect, kita set manual
       redirect: 'manual', 

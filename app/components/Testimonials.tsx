@@ -56,7 +56,7 @@ export default function Testimonials() {
       {
         name: 'Dewi',
         industry: 'RS PERMATA GUNUNG PUTRI',
-        quote: 'Banyak sekali perubahan setelah berkolaborasi dengan SDBI. Pertama mengetahui bagaimana car pembuatan kontren, peningkatan followers, dan dalam peningkatan jumlah pasien karena disini juga banyak informasi yang dibutuhkan  oleh pasien kita. harapan kami untuk RS Gunung Putri agar lebih baik lagi karena kita terus terang saja selama ini memang selalumendapatkan bimbingan dan pendampingan dalam mengadakan konten konten.',
+        quote: 'Banyak sekali perubahan setelah berkolaborasi dengan SDBI. Pertama mengetahui bagaimana cara pembuatan konten, peningkatan followers, dan dalam peningkatan jumlah pasien karena disini juga banyak informasi yang dibutuhkan oleh pasien kita. Harapan kami untuk RS Gunung Putri agar lebih baik lagi karena kita terus terang saja selama ini memang selalu mendapatkan bimbingan dan pendampingan dalam mengadakan konten konten.',
         avatarIndex: 1,
       },
       {
@@ -74,7 +74,7 @@ export default function Testimonials() {
       {
         name: 'Kusmanto',
         industry: 'KOPERASI ABABIL SOLUTION',
-        quote: '"Yang kami rasakan overal impactnya terasa sekali dan kita sudah mulai coba pilah customer mana yang sudah dapat info dari sosial media  dan ternyata memang banyak dari sosial media yang masuk ke kita karena kita sudah bisa mapping mana yang tau dari sosial media dan mana yang bukan. Tim Ababil mulai merasakan banyak order yang masuk terus menerus.',
+        quote: 'Yang kami rasakan overal impactnya terasa sekali dan kita sudah mulai coba pilah customer mana yang sudah dapat info dari sosial media  dan ternyata memang banyak dari sosial media yang masuk ke kita karena kita sudah bisa mapping mana yang tau dari sosial media dan mana yang bukan. Tim Ababil mulai merasakan banyak order yang masuk terus menerus.',
         avatarIndex: 4,
       },
       {
@@ -94,13 +94,13 @@ export default function Testimonials() {
       {
         name: 'Labschool Cibubur',
         industry: 'EDUCATION',
-        quote: 'Kami mulai merasakan peningkatan visibilitas website untuk pencarian PPDB SD, SMP, dan SMA. Strategi SEO dan AI Search yang diterapkan SDBI membuat informasi sekolah lebih mudah ditemukan oleh calon orang tua siswa',
+        quote: 'Kami mulai merasakan peningkatan visibilitas website untuk pencarian PPDB SD, SMP, dan SMA. Strategi SEO dan AI Search yang diterapkan SDBI membuat informasi sekolah lebih mudah ditemukan oleh calon orang tua siswa.',
         avatarIndex: 3,
       },
       {
         name: 'RS Permata Gunung Putri',
         industry: 'HEALTHCARE',
-        quote: 'Setelah optimasi SEO dan AI Search, kami mulai menerima pasien yang mengetahui RS Permata Gunung Putri melalui Google maupun rekomendasi AI seperti ChatGPT dan Gemini. Trafik website meningkat dan jumlah pertanyaan pelayanan dari calon pasien juga bertambah',
+        quote: 'Setelah optimasi SEO dan AI Search, kami mulai menerima pasien yang mengetahui RS Permata Gunung Putri melalui Google maupun rekomendasi AI seperti ChatGPT dan Gemini. Trafik website meningkat dan jumlah pertanyaan pelayanan dari calon pasien juga bertambah.',
         avatarIndex: 1,
       },
       {
@@ -126,31 +126,31 @@ export default function Testimonials() {
       {
         name: 'Addamas Nizaroeddin',
         industry: '',
-        quote: 'Saya mengikuti social media special academy selama 3 bulan mulai bulan juni sd sep 2025, selama mengikuti pelatihan Digital Marketing ini mendapat banyak materi teori, praktek Lab dan magang bersama Rekanan Vendor dari SDBI , Bravo Coach Yoso, Mb Nia, Mb Lia serta Team dari SDBI',
+        quote: 'Saya mengikuti social media special academy selama 3 bulan mulai bulan juni sd sep 2025, selama mengikuti pelatihan Digital Marketing ini mendapat banyak materi teori, praktek Lab dan magang bersama Rekanan Vendor dari SDBI, Bravo Coach Yoso, Mb Nia, Mb Lia serta Team dari SDBI.',
         avatarIndex: 9,
       },
       {
         name: 'Sabdo Rachim',
         industry: '',
-        quote: 'Alhamdulillah bisa ikut pelatihan bersama coach Yoso Lukito. Jdi menambah pengetahuan dlm digital marketing baik dlm teori, praktek dan beberapa tools yg harus di gunakan dlm membuat sebuah konten yg menarik. Semoga Allah mudahkan urusan kita semua dlm bermuamalah dlm mencari rezeki yg halal, Aamiin. Ditunggu kembali pelatihan kelas lainnya...',
+        quote: 'Alhamdulillah bisa ikut pelatihan bersama coach Yoso Lukito. Jadi menambah pengetahuan dlm digital marketing baik dlm teori, praktek dan beberapa tools yg harus di gunakan dlm membuat sebuah konten yg menarik. Semoga Allah mudahkan urusan kita semua dlm bermuamalah dlm mencari rezeki yg halal, Aamiin. Ditunggu kembali pelatihan kelas lainnya ...',
         avatarIndex: 10,
       },
       {
         name: 'Khairunnisa Nisa',
         industry: '',
-        quote: 'Maa syaa Allaah Walhamdulillaah dapat kesempatan ikutan Bootcamp Digital Marketing oleh Coach Yoso Lukito di Auditorium Masjid Albarkah, selain tempatnya nyaman fasilitasnya juga good dan ilmunya daging banget....mudah mudahan bermanfaat dan bisa aplikasinya Meskipun saya yakin masih banyak ilmu yg harus dipelajari lagi untuk mendapatkan hasil yg optimal dalam digital marketing',
+        quote: 'Maa syaa Allaah Walhamdulillaah dapat kesempatan ikutan Bootcamp Digital Marketing oleh Coach Yoso Lukito di Auditorium Masjid Albarkah, selain tempatnya nyaman fasilitasnya juga good dan ilmunya daging banget ... mudah mudahan bermanfaat dan bisa aplikasinya Meskipun saya yakin masih banyak ilmu yg harus dipelajari lagi untuk mendapatkan hasil yg optimal dalam digital marketing.',
         avatarIndex: 11,
       },
       {
         name: 'Syaafati R Suryo',
         industry: '',
-        quote: 'Alhamdulillaah berkesempatan gabung di WAG Sekolah Digital Bisnis Indonesia (SDBI) beberapa waktu lalu, meski belum memiliki kesempatan untuk ikut Bootcamp DigiMar-nya 😊 MaaSyaaAllah Coach Yoso shodaqoh Ilmunya gak berhenti² di WAG. Member yang bertanya pun selalu berusaha dijawab oleh Coach Yoso secara langsung, padahal beliau pribadi yang sangat sibuk sekali. Syukron Coach Yoso dan SDBI Team yang telah memfasilitasi saya untuk bisa bergabung di WAG SDBI, sehingga banyak sekali insight yang bisa saya dapatkan. Semoga menjadi pahala jariyah untuk Coach Yoso dan SDBI Team. Aamiin... Baarakallaahu fiikum.',
+        quote: 'Alhamdulillaah berkesempatan gabung di WAG Sekolah Digital Bisnis Indonesia (SDBI) beberapa waktu lalu, meski belum memiliki kesempatan untuk ikut Bootcamp DigiMar-nya 😊 MaaSyaaAllah Coach Yoso shodaqoh Ilmunya gak berhenti² di WAG. Member yang bertanya pun selalu berusaha dijawab oleh Coach Yoso secara langsung, padahal beliau pribadi yang sangat sibuk sekali. Syukron Coach Yoso dan SDBI Team yang telah memfasilitasi saya untuk bisa bergabung di WAG SDBI, sehingga banyak sekali insight yang bisa saya dapatkan. Semoga menjadi pahala jariyah untuk Coach Yoso dan SDBI Team. Aamiin ... Baarakallaahu fiikum.',
         avatarIndex: 12,
       },
       {
         name: 'Kami Senin',
         industry: '',
-        quote: 'Terimakasih untuk Coach Yoso dan tim atas ilmu yang dibagikan kepada kami. Seminarnya sangat membantu, sehingga kami mendapatkan insight-insight baru terhadap dunia digital marketing. Semoga Tim SDBI semakin maju dan terus berbagi ilmu dengan teman-trman diluar sana yang masih membutuhkan ilmu baru',
+        quote: 'Terimakasih untuk Coach Yoso dan tim atas ilmu yang dibagikan kepada kami. Seminarnya sangat membantu, sehingga kami mendapatkan insight-insight baru terhadap dunia digital marketing. Semoga Tim SDBI semakin maju dan terus berbagi ilmu dengan teman-trman diluar sana yang masih membutuhkan ilmu baru.',
         avatarIndex: 13,
       },
       {
@@ -279,7 +279,7 @@ export default function Testimonials() {
               </div>
 
               {/* Quote */}
-              <p className="text-sm text-[#374151] leading-relaxed">
+              <p className="text-sm text-[#374151] leading-relaxed text-justify">
                 {item.quote}
               </p>
             </div>

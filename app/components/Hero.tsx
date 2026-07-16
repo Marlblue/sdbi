@@ -31,7 +31,7 @@ export default function Hero() {
   return (
     <section
       id="beranda"
-      className="relative pt-[70px] md:pt-[100px] pb-12 md:pb-20 overflow-hidden"
+      className="relative pt-[30px] md:pt-[50px] pb-12 md:pb-20 overflow-hidden"
       style={{
         backgroundImage: `url('/bg-hero/background-hero.webp')`,
         backgroundSize: 'cover',
@@ -101,7 +101,7 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center">
           {/* Kolom Kiri - Content */}
-          <div className="md:col-span-5 space-y-5 lg:space-y-6">
+          <div className="md:col-span-5 space-y-5 lg:space-y-6 md:-mt-12 lg:-mt-24">
             {/* Label */}
             <div
               className="flex items-center space-x-2 reveal"
@@ -160,8 +160,8 @@ export default function Hero() {
           </div>
 
           {/* Kolom Kanan - Image & Stats */}
-          <div className="md:col-span-7 space-y-12">
-            <div className="relative">
+          <div className="md:col-span-7 space-y-10 lg:pl-8">
+            <div className="relative max-w-[95%] md:max-w-[90%] mx-auto md:ml-auto md:mr-0">
               <div
                 className="relative rounded-3xl overflow-hidden shadow-2xl reveal-scale"
                 style={{ animationDelay: '0.2s' }}

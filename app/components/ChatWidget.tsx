@@ -60,21 +60,12 @@ export default function ChatWidget() {
     setError('');
 
     try {
-      const res = await fetch('/api/chat-lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: text,
-          nama: userName.trim(),
-          phone: userPhone.trim(),
-          page: window.location.pathname,
-        }),
-      });
-
-      if (!res.ok) throw new Error('failed');
+      const waMessage = `Halo SDBI, nama saya ${userName.trim()}.\n\n${text}`;
+      const waUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(waMessage)}`;
+      window.open(waUrl, '_blank');
 
       simulateTypingThenReply(
-        'Terima kasih! Pesan kamu sudah kami terima ✅\nTim kami akan segera menghubungi kamu. Ditunggu ya! 🚀'
+        'Terima kasih! Kami sedang mengalihkan kamu ke WhatsApp untuk ngobrol langsung dengan tim kami 🚀'
       );
     } catch {
       setError('Gagal mengirim pesan. Silakan coba lagi.');
