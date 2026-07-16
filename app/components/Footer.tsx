@@ -96,7 +96,7 @@ export default function Footer() {
             <div className="space-y-5">
               <div>
                 <p className="font-semibold text-sm mb-1">WhatsApp</p>
-                <p className="text-gray-300 text-sm">+62 8XX-XXXX-XXXX</p>
+                <p className="text-gray-300 text-sm">+62 852-1143-6032</p>
               </div>
               <div>
                 <p className="font-semibold text-sm mb-1">Email</p>
