@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type ChatMessage = {
   from: 'admin' | 'user';
@@ -16,37 +16,66 @@ export default function ChatWidget() {
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
+  const [showTyping, setShowTyping] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [started, setStarted] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { from: 'admin', text: 'Hai, ada yang bisa kami bantu?', time: now() },
+    { from: 'admin', text: 'Hai, ada yang bisa kami bantu? 👋', time: now() },
   ]);
+
+  // Auto-scroll ke bawah setiap ada pesan baru
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, showTyping]);
+
+  const simulateTypingThenReply = (text: string) => {
+    setShowTyping(true);
+    setTimeout(() => {
+      setShowTyping(false);
+      setMessages((prev) => [...prev, { from: 'admin', text, time: now() }]);
+    }, 1200);
+  };
+
+  const handleStartChat = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userName.trim()) return;
+    setStarted(true);
+    setTimeout(() => {
+      simulateTypingThenReply(`Hai ${userName.trim()}! Silakan tulis pesan atau pertanyaan kamu 😊`);
+    }, 300);
+  };
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     const text = message.trim();
     if (!text || sending) return;
 
+    setMessage('');
+    setMessages((prev) => [...prev, { from: 'user', text, time: now() }]);
+
     setSending(true);
     setError('');
-    setMessages((prev) => [...prev, { from: 'user', text, time: now() }]);
-    setMessage('');
 
     try {
       const res = await fetch('/api/chat-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, page: window.location.pathname }),
+        body: JSON.stringify({
+          message: text,
+          nama: userName.trim(),
+          phone: userPhone.trim(),
+          page: window.location.pathname,
+        }),
       });
 
       if (!res.ok) throw new Error('failed');
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          from: 'admin',
-          text: 'Terima kasih, pesan Anda sudah kami terima. Tim kami akan segera menghubungi Anda.',
-          time: now(),
-        },
-      ]);
+      simulateTypingThenReply(
+        'Terima kasih! Pesan kamu sudah kami terima ✅\nTim kami akan segera menghubungi kamu. Ditunggu ya! 🚀'
+      );
     } catch {
       setError('Gagal mengirim pesan. Silakan coba lagi.');
     } finally {
@@ -57,18 +86,26 @@ export default function ChatWidget() {
   return (
     <>
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-[999] w-[320px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+        <div className="fixed bottom-24 right-6 z-[999] w-[340px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-[slideUp_0.3s_ease-out]">
           {/* Header */}
-          <div className="bg-[#0A1E3F] px-4 py-4 flex items-start justify-between">
-            <div>
-              <p className="text-white font-bold text-sm">SDBI Admin</p>
-              <p className="text-white/70 text-xs mt-0.5">Biasanya membalas dalam 1 hari</p>
+          <div className="bg-[#0A1E3F] px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-sm">
+                S
+              </div>
+              <div>
+                <p className="text-white font-bold text-sm">SDBI Admin</p>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#25D366] inline-block animate-pulse" />
+                  <p className="text-white/70 text-xs">Online</p>
+                </div>
+              </div>
             </div>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
               aria-label="Tutup chat"
-              className="text-white/80 hover:text-white transition-colors"
+              className="text-white/80 hover:text-white transition-colors p-1"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -76,52 +113,119 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          {/* Messages */}
-          <div className="px-4 py-4 space-y-3 max-h-80 overflow-y-auto bg-[#ECE5DD]">
-            <p className="text-center text-[11px] text-gray-500">Hari ini</p>
-            {messages.map((m, i) => (
-              <div key={i} className={`flex ${m.from === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div
-                  className={`max-w-[85%] rounded-xl px-3 py-2 text-sm shadow-sm ${
-                    m.from === 'user' ? 'bg-[#25D366] text-white' : 'bg-white text-gray-800'
-                  }`}
-                >
-                  {m.from === 'admin' && (
-                    <p className="text-[11px] font-semibold text-[#0A1E3F] mb-0.5">SDBI Admin</p>
-                  )}
-                  <p className="leading-snug">{m.text}</p>
-                  <p className={`text-[10px] mt-1 text-right ${m.from === 'user' ? 'text-white/80' : 'text-gray-400'}`}>
-                    {m.time}
-                  </p>
-                </div>
+          {!started ? (
+            /* Intro Form — Nama + No WA */
+            <div className="px-5 py-6 bg-[#ECE5DD]">
+              <div className="bg-white rounded-xl p-4 shadow-sm">
+                <p className="text-sm text-gray-700 mb-4 leading-snug">
+                  Hai! Sebelum mulai chat, isi data singkat ini ya supaya tim kami bisa follow up 😊
+                </p>
+                <form onSubmit={handleStartChat} className="space-y-3">
+                  <div>
+                    <input
+                      type="text"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                      placeholder="Nama kamu *"
+                      required
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#0A1E3F] transition-colors placeholder:text-gray-400 text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="tel"
+                      value={userPhone}
+                      onChange={(e) => setUserPhone(e.target.value.replace(/[^\d+\-\s]/g, ''))}
+                      placeholder="No WhatsApp (opsional)"
+                      className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#0A1E3F] transition-colors placeholder:text-gray-400 text-gray-900"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={!userName.trim()}
+                    className="w-full bg-[#25D366] hover:bg-[#20BD5A] disabled:opacity-50 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors"
+                  >
+                    Mulai Chat
+                  </button>
+                </form>
               </div>
-            ))}
-          </div>
-
-          {/* Input */}
-          <form onSubmit={handleSend} className="p-3 border-t border-gray-100 bg-white">
-            {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Ketik pesan Anda"
-                disabled={sending}
-                className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm outline-none placeholder:text-gray-400 disabled:opacity-60"
-              />
-              <button
-                type="submit"
-                disabled={sending || !message.trim()}
-                aria-label="Kirim pesan"
-                className="shrink-0 w-10 h-10 bg-[#25D366] hover:bg-[#20BD5A] disabled:opacity-50 rounded-full flex items-center justify-center transition-colors"
-              >
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                </svg>
-              </button>
             </div>
-          </form>
+          ) : (
+            <>
+              {/* Messages */}
+              <div className="px-4 py-4 space-y-3 max-h-80 min-h-[200px] overflow-y-auto bg-[#ECE5DD]">
+                <p className="text-center text-[11px] text-gray-500">Hari ini</p>
+                {messages.map((m, i) => (
+                  <div key={i} className={`flex ${m.from === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div
+                      className={`max-w-[85%] rounded-xl px-3 py-2 text-sm shadow-sm ${
+                        m.from === 'user' ? 'bg-[#DCF8C6] text-gray-900' : 'bg-white text-gray-800'
+                      }`}
+                    >
+                      {m.from === 'admin' && (
+                        <p className="text-[11px] font-semibold text-[#0A1E3F] mb-0.5">SDBI Admin</p>
+                      )}
+                      <p className="leading-snug whitespace-pre-line">{m.text}</p>
+                      <p
+                        className={`text-[10px] mt-1 text-right ${
+                          m.from === 'user' ? 'text-gray-500' : 'text-gray-400'
+                        }`}
+                      >
+                        {m.time}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Typing indicator */}
+                {showTyping && (
+                  <div className="flex justify-start">
+                    <div className="bg-white rounded-xl px-4 py-3 shadow-sm">
+                      <div className="flex items-center gap-1">
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input */}
+              <form onSubmit={handleSend} className="p-3 border-t border-gray-100 bg-white">
+                {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Ketik pesan kamu..."
+                    disabled={sending}
+                    className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm outline-none placeholder:text-gray-400 disabled:opacity-60 text-gray-900"
+                  />
+                  <button
+                    type="submit"
+                    disabled={sending || !message.trim()}
+                    aria-label="Kirim pesan"
+                    className="shrink-0 w-10 h-10 bg-[#25D366] hover:bg-[#20BD5A] disabled:opacity-50 rounded-full flex items-center justify-center transition-colors"
+                  >
+                    {sending ? (
+                      <svg className="w-5 h-5 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
         </div>
       )}
 

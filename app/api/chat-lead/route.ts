@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: { message?: unknown; page?: unknown };
+  let body: { message?: unknown; page?: unknown; nama?: unknown; phone?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -22,12 +22,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Pesan tidak boleh kosong.' }, { status: 400 });
   }
 
+  const nama = typeof body.nama === 'string' ? body.nama.trim() : '';
+  const phone = typeof body.phone === 'string' ? body.phone.trim() : '';
+
   try {
     const scriptResponse = await fetch(webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message,
+        nama: nama || '-',
+        phone: phone || '-',
         page: typeof body.page === 'string' ? body.page : '',
         timestamp: new Date().toISOString(),
       }),
