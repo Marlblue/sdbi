@@ -213,9 +213,9 @@ export default function Transformation() {
         : 'w-[calc(25%-12px)]';
 
   return (
-    <section className="relative pt-10 md:pt-24 pb-10 md:pb-16 overflow-hidden">
+    <section className="relative pt-10 md:pt-20 pb-10 md:pb-16 overflow-hidden">
       {/* Background Image - only covers top portion */}
-      <div className="absolute inset-x-0 top-0 h-[78%] md:h-[65%] z-0">
+      <div className="absolute inset-x-0 top-0 h-[78%] md:h-[70%] z-0">
         <Image
           src="/bg-transformation/Website SDBI (1).webp"
           alt="Background pattern"
@@ -228,7 +228,7 @@ export default function Transformation() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Section: Left text + Right image */}
-        <div className="grid md:grid-cols-2 gap-4 md:gap-8 lg:gap-16 items-start mb-0">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6 lg:gap-10 items-start mb-0">
           {/* Left - Title & Button */}
           <div className="pt-4 text-center md:text-left">
             <h2 className="text-3xl md:text-4xl lg:text-[2.6rem] font-bold leading-tight mb-4">
@@ -255,7 +255,7 @@ export default function Transformation() {
           </div>
 
           {/* Right - High-Ticket Closing + Image */}
-          <div className="relative md:min-h-[26rem] lg:min-h-[30rem]">
+          <div className="relative flex flex-col">
             {/* Text block */}
             <div className="relative z-10 pt-0 text-center md:text-left">
               <h3 className="text-4xl md:text-5xl lg:text-[3.5rem] font-[900] text-[#0A1E3F] leading-[1.05] mb-3 tracking-tight">
@@ -271,20 +271,27 @@ export default function Transformation() {
 
             </div>
             {/* Coach Yoso Image - stacked below text on mobile; on md+ fills the space below the quote down to the thumbnails */}
-            <div className="relative w-[56%] aspect-[1366/1614] mx-auto mt-4 md:mx-0 md:absolute md:mt-0 md:left-[3.5rem] lg:left-[1.5rem] md:top-[6rem] lg:top-[6.5rem] md:bottom-[3rem] lg:bottom-0 md:w-[40%] lg:w-[36%] md:aspect-auto z-[5]">
+            {/* Coach Yoso Image - responsive, fades at bottom on desktop to blend with thumbnails */}
+            <div
+              className="relative w-[56%] aspect-[1366/1614] mx-auto mt-2 md:mt-0 md:mx-0 md:w-[55%] lg:w-[50%] md:self-start z-[5]"
+              style={{
+                maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+              }}
+            >
               <Image
                 src="/images-transformation/image.webp"
                 alt="Coach Yoso - High Ticket Closing"
                 fill
                 className="object-contain object-bottom"
-                sizes="(max-width: 768px) 70vw, (max-width: 1024px) 38vw, 32vw"
+                sizes="(max-width: 768px) 56vw, (max-width: 1024px) 45vw, 40vw"
               />
             </div>
           </div>
         </div>
 
         {/* Testimonial Thumbnail Carousel */}
-        <div className="relative z-20 -mt-2 md:-mt-14 px-0 md:px-14">
+        <div className="relative z-20 -mt-2 md:-mt-20 px-0 md:px-14">
           {/* Left Arrow Button (desktop only) */}
           <button
             onClick={prev}
