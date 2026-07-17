@@ -79,7 +79,7 @@ export default function Testimonials() {
       },
       {
         name: 'Almi',
-        industry: 'FRUTAGELATO',
+        industry: 'FRUTTAGELATO',
         quote: 'Alhamdulillah saya banyak terbantu terutama di sosial media. semenjak gabung dengan SDBI saya belajar banyak. Dari koordinasi, kerjasama semua berjalan sangat lancar.',
         avatarIndex: 5,
       },
