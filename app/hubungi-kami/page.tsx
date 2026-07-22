@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import StickyHeader from "../components/StickyHeader";
 import CTAForm from "../components/CTAForm";
 import Footer from "../components/Footer";
+import AnimateOnScroll from "../components/AnimateOnScroll";
 
 export const metadata: Metadata = {
   title: "Hubungi Kami | Sekolah Digital Bisnis Indonesia (SDBI)",
@@ -62,7 +63,7 @@ export default function HubungiKamiPage() {
               <span className="text-white font-medium">Hubungi Kami</span>
             </nav>
 
-            <div className="text-center">
+            <AnimateOnScroll animation="fade-in-up" duration={700} className="text-center">
               <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
                 Hubungi <span className="text-[#F5821F]">Kami</span>
               </h1>
@@ -70,7 +71,7 @@ export default function HubungiKamiPage() {
                 Tim kami siap membantu kebutuhan digital marketing, pelatihan, dan konsultasi
                 bisnis Anda. Sampaikan pertanyaan Anda melalui kanal berikut.
               </p>
-            </div>
+            </AnimateOnScroll>
           </div>
         </div>
 
@@ -80,40 +81,43 @@ export default function HubungiKamiPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
               {/* Contact cards */}
               <div className="space-y-6">
-                {contactPoints.map((point) => (
-                  <Link
-                    key={point.label}
-                    href={point.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 p-6"
-                  >
-                    <div className="w-12 h-12 shrink-0 rounded-xl bg-[#0A1E3F]/5 border border-[#0A1E3F]/10 flex items-center justify-center">
-                      <Image src={point.icon} alt="" width={24} height={24} className="w-6 h-6" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold uppercase tracking-wider text-[#0A1E3F] mb-1">
-                        {point.label}
-                      </p>
-                      <p className="text-[#6B7280] text-sm leading-relaxed">{point.value}</p>
-                    </div>
-                  </Link>
+                {contactPoints.map((point, index) => (
+                  <AnimateOnScroll key={point.label} animation="slide-in-left" delay={index * 120} duration={600}>
+                    <Link
+                      href={point.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 p-6"
+                    >
+                      <div className="w-12 h-12 shrink-0 rounded-xl bg-[#0A1E3F]/5 border border-[#0A1E3F]/10 flex items-center justify-center">
+                        <Image src={point.icon} alt="" width={24} height={24} className="w-6 h-6" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold uppercase tracking-wider text-[#0A1E3F] mb-1">
+                          {point.label}
+                        </p>
+                        <p className="text-[#6B7280] text-sm leading-relaxed">{point.value}</p>
+                      </div>
+                    </Link>
+                  </AnimateOnScroll>
                 ))}
               </div>
 
               {/* Map */}
-              <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm h-80 lg:h-full min-h-[320px]">
-                <iframe
-                  src="https://maps.google.com/maps?q=Sekolah+Digital+Bisnis+Indonesia+(SDBI+Digital+Marketing+Agency),+Graha+Multipiranti,+Jl.+Radin+Inten+II+No.2-8,+Duren+Sawit,+Jakarta+Timur+13440&output=embed"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Lokasi Kantor SDBI"
-                />
-              </div>
+              <AnimateOnScroll animation="slide-in-right" delay={200} duration={700}>
+                <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm h-80 lg:h-full min-h-[320px]">
+                  <iframe
+                    src="https://maps.google.com/maps?q=Sekolah+Digital+Bisnis+Indonesia+(SDBI+Digital+Marketing+Agency),+Graha+Multipiranti,+Jl.+Radin+Inten+II+No.2-8,+Duren+Sawit,+Jakarta+Timur+13440&output=embed"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Lokasi Kantor SDBI"
+                  />
+                </div>
+              </AnimateOnScroll>
             </div>
           </div>
         </section>

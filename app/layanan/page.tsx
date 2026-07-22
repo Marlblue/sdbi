@@ -4,6 +4,7 @@ import StickyHeader from "../components/StickyHeader";
 import Services from "../components/Services";
 import CTAForm from "../components/CTAForm";
 import Footer from "../components/Footer";
+import AnimateOnScroll from "../components/AnimateOnScroll";
 
 export const metadata: Metadata = {
   title: "Layanan | Sekolah Digital Bisnis Indonesia (SDBI)",
@@ -41,7 +42,7 @@ export default function LayananPage() {
               <span className="text-white font-medium">Layanan</span>
             </nav>
 
-            <div className="text-center">
+            <AnimateOnScroll animation="fade-in-up" duration={700} className="text-center">
               <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
                 Layanan <span className="text-[#F5821F]">Kami</span>
               </h1>
@@ -49,7 +50,7 @@ export default function LayananPage() {
                 Solusi digital marketing, pelatihan, dan konsultasi bisnis untuk membantu perusahaan
                 Anda tumbuh secara terukur.
               </p>
-            </div>
+            </AnimateOnScroll>
           </div>
         </div>
 

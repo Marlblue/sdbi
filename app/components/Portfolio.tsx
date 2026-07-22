@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Counter from './Counter';
+import AnimateOnScroll from './AnimateOnScroll';
 
 export default function Portfolio() {
   const stats = [
@@ -50,7 +51,7 @@ export default function Portfolio() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid md:grid-cols-3 gap-12 items-start">
           {/* Left Column - Title */}
-          <div className="md:col-span-1">
+          <AnimateOnScroll animation="slide-in-left" duration={800} className="md:col-span-1">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
               Portofolio & Case Studies
             </h2>
@@ -65,49 +66,52 @@ export default function Portfolio() {
             >
               Konsultasi Gratis Sekarang
             </Link>
-          </div>
+          </AnimateOnScroll>
 
           {/* Right Column - Stats + Cards */}
           <div className="md:col-span-2">
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 mb-8">
               {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <p className={`text-3xl md:text-4xl font-bold ${stat.color} mb-1`}>
-                    <Counter end={stat.end} prefix={stat.prefix} suffix={stat.suffix} />
-                  </p>
-                  <p className="text-xs md:text-sm text-gray-300 font-medium mt-2">
-                    {stat.label}
-                  </p>
-                </div>
+                <AnimateOnScroll key={index} animation="fade-in-up" delay={index * 150} duration={600}>
+                  <div className="text-center">
+                    <p className={`text-3xl md:text-4xl font-bold ${stat.color} mb-1`}>
+                      <Counter end={stat.end} prefix={stat.prefix} suffix={stat.suffix} />
+                    </p>
+                    <p className="text-xs md:text-sm text-gray-300 font-medium mt-2">
+                      {stat.label}
+                    </p>
+                  </div>
+                </AnimateOnScroll>
               ))}
             </div>
 
             {/* Case Study Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {caseStudies.map((study, index) => (
-                <div
-                  key={index}
-                  className={`${study.bgColor} rounded-2xl p-6 hover:shadow-lg transition-all duration-300`}
-                >
-                  <div className="flex items-center justify-center mb-4 h-24">
-                    <Image
-                      src={study.logo}
-                      alt={study.result}
-                      width={160}
-                      height={120}
-                      className="h-20 w-auto object-contain"
-                    />
-                  </div>
-                  <p className={`text-center font-bold text-base ${study.resultColor} mb-2 leading-snug`}>
-                    {study.result}
-                  </p>
-                  <div className="bg-gray-50 rounded-lg p-2 mt-3 border border-gray-100">
-                    <p className="text-xs text-[#6B7280] text-center">
-                      {study.detail}
+                <AnimateOnScroll key={index} animation="scale-in" delay={index * 120} duration={600}>
+                  <div
+                    className={`${study.bgColor} rounded-2xl p-6 hover:shadow-lg transition-all duration-300`}
+                  >
+                    <div className="flex items-center justify-center mb-4 h-24">
+                      <Image
+                        src={study.logo}
+                        alt={study.result}
+                        width={160}
+                        height={120}
+                        className="h-20 w-auto object-contain"
+                      />
+                    </div>
+                    <p className={`text-center font-bold text-base ${study.resultColor} mb-2 leading-snug`}>
+                      {study.result}
                     </p>
+                    <div className="bg-gray-50 rounded-lg p-2 mt-3 border border-gray-100">
+                      <p className="text-xs text-[#6B7280] text-center">
+                        {study.detail}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </AnimateOnScroll>
               ))}
             </div>
           </div>

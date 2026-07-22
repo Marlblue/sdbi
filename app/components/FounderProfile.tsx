@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Counter from './Counter';
+import AnimateOnScroll from './AnimateOnScroll';
 
 export default function FounderProfile() {
   const credentials = [
@@ -22,7 +23,7 @@ export default function FounderProfile() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-12 gap-6 lg:gap-10 items-center">
           {/* Left - Photo (no card, directly on background) */}
-          <div className="md:col-span-5">
+          <AnimateOnScroll animation="slide-in-left" duration={800} className="md:col-span-5">
             <Image
               src="/images-founder-profile/coach-yoso-lukito.webp"
               alt="Coach Yoso Lukito - Founder & CEO SDBI"
@@ -31,10 +32,10 @@ export default function FounderProfile() {
               className="w-full h-auto object-contain"
               sizes="(max-width: 768px) 100vw, 42vw"
             />
-          </div>
+          </AnimateOnScroll>
 
           {/* Middle - Profile Info */}
-          <div className="md:col-span-5">
+          <AnimateOnScroll animation="fade-in-up" delay={150} duration={700} className="md:col-span-5">
             <span className="inline-block bg-[#FFD54F] text-[#0A1E3F] font-bold text-xs px-3 py-1.5 rounded uppercase tracking-wider mb-2">
               Founder & CEO SDBI
             </span>
@@ -48,12 +49,14 @@ export default function FounderProfile() {
             {/* Credentials */}
             <ul className="space-y-2.5 mb-5">
               {credentials.map((cred, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#0A1E3F] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-                  </svg>
-                  <span className="text-sm font-bold text-black">{cred}</span>
-                </li>
+                <AnimateOnScroll key={index} animation="fade-in-up" delay={200 + index * 80} duration={500}>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-[#0A1E3F] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <span className="text-sm font-bold text-black">{cred}</span>
+                  </li>
+                </AnimateOnScroll>
               ))}
             </ul>
 
@@ -67,10 +70,10 @@ export default function FounderProfile() {
             >
               Cek Profile Lengkap & Portofolio
             </Link>
-          </div>
+          </AnimateOnScroll>
 
           {/* Right - Stats (vertical stack) */}
-          <div className="md:col-span-2">
+          <AnimateOnScroll animation="slide-in-right" delay={300} duration={700} className="md:col-span-2">
             <div className="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 space-y-6">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
@@ -81,7 +84,7 @@ export default function FounderProfile() {
                 </div>
               ))}
             </div>
-          </div>
+          </AnimateOnScroll>
         </div>
       </div>
     </section>
