@@ -6,6 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
+        disallow: "/admin",
       },
     ],
     sitemap: "https://sekolahdigitalbisnis.com/sitemap.xml",

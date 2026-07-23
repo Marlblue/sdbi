@@ -1,0 +1,33 @@
+backend:
+  name: github
+  repo: Marlblue/sdbi
+  branch: main
+  base_url: https://sekolahdigitalbisnis.com
+  auth_endpoint: api/auth
+
+publish_mode: simple
+media_folder: "public/blog-images"
+public_folder: "/blog-images"
+
+collections:
+  - name: "articles"
+    label: "Artikel"
+    files:
+      - file: "app/lib/articles-data.json"
+        label: "Daftar Artikel"
+        name: "articlesFile"
+        fields:
+          - label: "Artikel"
+            name: "articles"
+            widget: "list"
+            summary: "{{title}}"
+            fields:
+              - { label: "Slug (untuk URL)", name: "slug", widget: "string", hint: "Huruf kecil, pisahkan kata dengan tanda hubung. Contoh: cara-menaikkan-omzet-umkm" }
+              - { label: "Judul", name: "title", widget: "string" }
+              - { label: "Tanggal", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+              - { label: "Ringkasan Singkat", name: "excerpt", widget: "text" }
+              - { label: "Isi Artikel", name: "content", widget: "markdown" }
+              - { label: "Gambar Utama", name: "image", widget: "image" }
+              - { label: "Kategori", name: "category", widget: "string", default: "Uncategorized" }
+              - { label: "Tags", name: "tags", widget: "list", default: [] }
+              - { label: "Estimasi Waktu Baca", name: "readTime", widget: "string", default: "5 MENIT BACA" }

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { marked } from "marked";
 import { getAllArticles, getArticleBySlug, formatTanggal, getLatestArticles } from "../lib/articles";
 import StickyHeader from "../components/StickyHeader";
 import Footer from "../components/Footer";
@@ -105,7 +106,7 @@ export default async function ArticlePage({
         <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div
             className="article-content"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: marked.parse(article.content, { async: false }) }}
           />
 
           {article.tags.length > 0 && (
