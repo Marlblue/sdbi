@@ -2,7 +2,7 @@ backend:
   name: github
   repo: Marlblue/sdbi
   branch: main
-  base_url: https://sekolahdigitalbisnis.com
+  base_url: https://www.sekolahdigitalbisnis.com
   auth_endpoint: api/auth
 
 publish_mode: simple
