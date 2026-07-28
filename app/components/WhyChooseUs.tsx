@@ -67,7 +67,7 @@ export default function WhyChooseUs() {
                 <h3 className="text-[#0A1E3F] font-bold text-sm sm:text-[15px] lg:text-[16px] mb-2 sm:mb-4 leading-snug min-h-[3lh] lg:min-h-0">
                   {reason.title}
                 </h3>
-                <p className="text-[#9CA3AF] text-xs sm:text-[13px] leading-relaxed sm:leading-[1.8] flex-grow line-clamp-3 lg:line-clamp-none">
+                <p className="text-[#9CA3AF] text-xs sm:text-[13px] leading-relaxed sm:leading-[1.8] flex-grow  lg:line-clamp-none">
                   {reason.description}
                 </p>
               </div>

@@ -131,7 +131,7 @@ export default function Services({ showHeading = true, showMoreButton = true }: 
                     ))}
                   </div>
 
-                  <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed flex-1 mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">
+                  <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed flex-1 mb-3 sm:mb-4 sm:line-clamp-none">
                     {service.description}
                   </p>
 
