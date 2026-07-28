@@ -86,14 +86,14 @@ export default function MediaCoverage() {
         </AnimateOnScroll>
 
         {/* News Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scroll-smooth -mx-4 px-4 md:mx-0 md:px-0 pb-2 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {newsArticles.map((article, index) => (
-            <AnimateOnScroll key={index} animation="fade-in-up" delay={index * 120} duration={600}>
+            <AnimateOnScroll key={index} animation="fade-in-up" delay={index * 120} duration={600} className="shrink-0 w-[80%] sm:w-[45%] snap-center md:shrink md:w-auto">
               <Link
                 href={article.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block hover:-translate-y-1"
+                className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 block hover:-translate-y-1 h-full"
               >
                 {/* Source bar */}
                 <div className={`bg-gradient-to-r ${article.gradient} px-4 py-3 flex items-center justify-between`}>

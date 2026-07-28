@@ -53,21 +53,21 @@ export default function WhyChooseUs() {
         </AnimateOnScroll>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
           {reasons.map((reason, index) => (
             <AnimateOnScroll key={index} animation="fade-in-up" delay={index * 120} duration={600}>
               <div
-                className="bg-white shadow-[0_0_40px_rgba(0,0,0,0.08)] rounded-[24px] p-6 lg:p-8 flex flex-col h-full hover:shadow-[0_0_50px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1"
+                className="bg-white shadow-[0_0_40px_rgba(0,0,0,0.08)] rounded-2xl p-3 sm:p-6 lg:p-8 flex flex-col h-full hover:shadow-[0_0_50px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1"
               >
                 <div
-                  className={`${reason.numColor} w-8 h-8 rounded-[8px] flex items-center justify-center font-bold text-xs mb-5`}
+                  className={`${reason.numColor} w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center font-bold text-[11px] sm:text-xs mb-3 sm:mb-5`}
                 >
                   {reason.number}
                 </div>
-                <h3 className="text-[#0A1E3F] font-bold text-[15px] lg:text-[16px] mb-4 leading-snug">
+                <h3 className="text-[#0A1E3F] font-bold text-sm sm:text-[15px] lg:text-[16px] mb-2 sm:mb-4 leading-snug min-h-[3lh] lg:min-h-0">
                   {reason.title}
                 </h3>
-                <p className="text-[#9CA3AF] text-[13px] leading-[1.8] flex-grow">
+                <p className="text-[#9CA3AF] text-xs sm:text-[13px] leading-relaxed sm:leading-[1.8] flex-grow line-clamp-3 lg:line-clamp-none">
                   {reason.description}
                 </p>
               </div>

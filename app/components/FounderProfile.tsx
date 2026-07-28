@@ -74,13 +74,13 @@ export default function FounderProfile() {
 
           {/* Right - Stats (vertical stack) */}
           <AnimateOnScroll animation="slide-in-right" delay={300} duration={700} className="md:col-span-2">
-            <div className="bg-white rounded-2xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 space-y-6">
+            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-row justify-between gap-2 md:flex-col md:justify-start md:gap-6">
               {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <p className={`text-2xl lg:text-3xl font-bold ${stat.color}`}>
+                <div key={index} className="text-center flex-1 md:flex-auto">
+                  <p className={`text-xl sm:text-2xl lg:text-3xl font-bold ${stat.color}`}>
                     <Counter end={stat.end} suffix={stat.suffix} />
                   </p>
-                  <p className="text-[10px] lg:text-xs text-[#6B7280] mt-1">{stat.label}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-[#6B7280] mt-1">{stat.label}</p>
                 </div>
               ))}
             </div>
