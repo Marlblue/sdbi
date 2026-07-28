@@ -3,18 +3,18 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import StickyHeader from '../components/StickyHeader';
 import Footer from '../components/Footer';
-import LinktreeServiceScroller from '../components/LinktreeServiceScroller';
+import HubungiServiceScroller from '../components/HubungiServiceScroller';
 
 export const metadata: Metadata = {
-  title: 'Sekolah Digital Bisnis Indonesia | Linktree',
+  title: 'Sekolah Digital Bisnis Indonesia | Hubungi',
   description:
     'Semua tautan penting SDBI dalam satu halaman: konsultasi WhatsApp, layanan, e-course & e-book, profil Coach Yoso, komunitas, dan sosial media.',
   robots: { index: false, follow: true },
   openGraph: {
-    title: 'Sekolah Digital Bisnis Indonesia | Linktree',
+    title: 'Sekolah Digital Bisnis Indonesia | Hubungi',
     description:
       'Semua tautan penting SDBI dalam satu halaman: konsultasi WhatsApp, layanan, e-course & e-book, profil Coach Yoso, komunitas, dan sosial media.',
-    url: 'https://sekolahdigitalbisnis.com/linktree',
+    url: 'https://sekolahdigitalbisnis.com/hubungi',
     type: 'website',
     locale: 'id_ID',
   },
@@ -67,7 +67,7 @@ const socialLinks = [
   },
 ];
 
-export default function LinktreePage() {
+export default function HubungiPage() {
   return (
     <>
       <StickyHeader />
@@ -111,7 +111,7 @@ export default function LinktreePage() {
               Konsultasi
             </Link>
           </div>
-          <LinktreeServiceScroller />
+          <HubungiServiceScroller />
         </section>
 
         {/* Main Buttons Section */}

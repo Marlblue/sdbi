@@ -11,7 +11,7 @@ const services = [
   { image: '/images-layanan/seo-ai.webp', label: 'SEO & AI Search Optimization' },
 ];
 
-export default function LinktreeServiceScroller() {
+export default function HubungiServiceScroller() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);
