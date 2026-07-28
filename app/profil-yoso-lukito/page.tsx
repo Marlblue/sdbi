@@ -125,7 +125,9 @@ export default function ProfilYosoLukitoPage() {
                 <AnimateOnScroll animation="fade-in-up" delay={400} duration={600}>
                   <div className="pt-2">
                     <Link
-                      href="/#konsultasi"
+                      href="https://wa.me/6285211436032"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-block bg-[#0A1E3F] text-white px-8 py-3.5 rounded-xl font-medium hover:bg-[#0A1E3F]/90 transition-colors text-sm"
                     >
                       Konsultasi Gratis Sekarang
@@ -321,7 +323,9 @@ export default function ProfilYosoLukitoPage() {
                 Konsultasikan strategi digital marketing dan transformasi bisnis Anda bersama tim ahli kami.
               </p>
               <Link
-                href="/#konsultasi"
+                href="https://wa.me/6285211436032"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-block bg-[#FFD54F] border-2 border-[#D4A843] text-[#0A1E3F] px-8 py-3.5 rounded-xl font-bold hover:bg-[#F5821F] hover:text-white hover:border-[#F5821F] transition-all duration-300 text-sm shadow-sm"
               >
                 Konsultasi Gratis Sekarang

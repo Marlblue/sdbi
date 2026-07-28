@@ -61,7 +61,9 @@ export default function Portfolio() {
               memperkuat strategi pemasaran, dan mengoptimalkan proses bisnis secara terukur.
             </p>
             <Link
-              href="#konsultasi"
+              href="https://wa.me/6285211436032"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-block bg-[#F5821F] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#F5821F]/90 transition-colors text-sm"
             >
               Konsultasi Gratis Sekarang

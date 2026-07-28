@@ -20,6 +20,7 @@ export default function Navbar({ className = '', onOpenChange }: NavbarProps) {
   const menuItems = [
     { label: 'Beranda', href: '/#beranda' },
     { label: 'Layanan', href: '/layanan' },
+    { label: 'E-Course', href: '/e-course' },
     { label: 'Portofolio', href: '/profil-yoso-lukito' },
     { label: 'Artikel', href: '/blog' },
     { label: 'Hubungi Kami', href: '/hubungi-kami' },
@@ -124,7 +125,9 @@ export default function Navbar({ className = '', onOpenChange }: NavbarProps) {
             </div>
 
             <Link
-              href="/#konsultasi"
+              href="https://wa.me/6285211436032"
+              target="_blank"
+              rel="noopener noreferrer"
               className="animate-cta-pulse bg-[#0A1E3F] text-white px-6 py-2.5 rounded-xl font-medium hover:bg-[#0A1E3F]/90 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 text-sm shadow-md whitespace-nowrap ml-4"
             >
               Konsultasi Sekarang
@@ -184,7 +187,9 @@ export default function Navbar({ className = '', onOpenChange }: NavbarProps) {
 
               <div className="pt-6">
                 <Link
-                  href="/#konsultasi"
+                  href="https://wa.me/6285211436032"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="animate-cta-pulse block bg-[#0A1E3F] text-white px-6 py-3.5 rounded-xl font-medium text-center hover:bg-[#0A1E3F]/90 transition-colors text-sm shadow-md"
                   onClick={() => toggleMobile(false)}
                 >

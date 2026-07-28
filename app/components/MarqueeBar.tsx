@@ -16,27 +16,27 @@ interface MarqueeBarProps {
 const defaultItems: MarqueeItem[] = [
   {
     text: 'Free Business Consultation',
-    cta: { label: 'Konsultasi Sekarang', href: '#konsultasi' },
+    cta: { label: 'Konsultasi Sekarang', href: 'https://wa.me/6285211436032' },
   },
   {
     text: 'Social Media Specialist Academy',
-    cta: { label: 'Lihat Program', href: '/layanan' },
+    cta: { label: 'Hubungi Kami', href: 'https://wa.me/6285211436032' },
   },
   {
     text: 'Corporate Training',
-    cta: { label: 'Hubungi Kami', href: '/hubungi-kami' },
+    cta: { label: 'Hubungi Kami', href: 'https://wa.me/6285211436032' },
   },
   {
     text: 'Business Speaker',
-    cta: { label: 'Hubungi Kami', href: '/hubungi-kami' },
+    cta: { label: 'Hubungi Kami', href: 'https://wa.me/6285211436032' },
   },
   {
     text: 'Digital Marketing Workshop',
-    cta: { label: 'Hubungi Kami', href: '/hubungi-kami' },
+    cta: { label: 'Hubungi Kami', href: 'https://wa.me/6285211436032' },
   },
   {
     text: 'Business Seminar',
-    cta: { label: 'Hubungi Kami', href: '/hubungi-kami' },
+    cta: { label: 'Hubungi Kami', href: 'https://wa.me/6285211436032' },
   },
 ];
 
@@ -71,6 +71,9 @@ export default function MarqueeBar({ items = defaultItems, speed = 28, className
               {item.cta && (
                 <Link
                   href={item.cta.href}
+                  {...(item.cta.href.startsWith('http')
+                    ? { target: '_blank', rel: 'noopener noreferrer' }
+                    : {})}
                   className="ml-4 inline-flex items-center gap-1 bg-transparent border border-[#F5821F] text-[#F5821F] hover:bg-[#F5821F] hover:text-white transition-colors rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap"
                 >
                   {item.cta.label}

@@ -133,7 +133,9 @@ export default async function ArticlePage({
               Konsultasikan strategi digital marketing dan transformasi bisnis Anda bersama tim ahli kami.
             </p>
             <Link
-              href="/#kontak"
+              href="https://wa.me/6285211436032"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-block bg-[#FFD54F] border-2 border-[#D4A843] text-[#0A1E3F] px-8 py-3.5 rounded-xl font-bold hover:bg-[#F5821F] hover:text-white hover:border-[#F5821F] transition-all duration-300 text-sm shadow-sm"
             >
               Konsultasi Gratis Sekarang

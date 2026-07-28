@@ -145,7 +145,9 @@ export default function Hero() {
               style={{ animationDelay: '0.45s' }}
             >
               <Link
-                href="#konsultasi"
+                href="https://wa.me/6285211436032"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="cta-btn bg-[#0A1E3F] text-white px-5 py-3 rounded-lg font-bold text-center hover:bg-[#0A1E3F]/90 shadow-md text-[11px] md:text-[12px]"
               >
                 Konsultasi Gratis Sekarang
