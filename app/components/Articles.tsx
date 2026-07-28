@@ -17,7 +17,7 @@ export default function Articles() {
         </AnimateOnScroll>
 
         {/* Article Cards */}
-        <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scroll-smooth -mx-4 px-4 md:mx-0 md:px-0 pb-2 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto overflow-y-hidden md:overflow-visible snap-x snap-mandatory md:snap-none scroll-smooth -mx-4 px-4 md:mx-0 md:px-0 pb-2 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {articles.map((article, index) => (
             <AnimateOnScroll key={article.slug} animation="fade-in-up" delay={index * 120} duration={600} className="shrink-0 w-[80%] sm:w-[45%] snap-center md:shrink md:w-auto">
               <Link href={`/${article.slug}`} className="group cursor-pointer h-full block">
