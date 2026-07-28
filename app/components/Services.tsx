@@ -96,42 +96,42 @@ export default function Services({ showHeading = true, showMoreButton = true }: 
         )}
 
         {/* Service Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {services.map((service, index) => (
             <AnimateOnScroll key={index} animation="fade-in-up" delay={index * 80} duration={600}>
               <div
                 className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full"
               >
                 {/* Image Area */}
-                <div className="relative h-44 bg-gray-100 overflow-hidden">
+                <div className="relative h-28 sm:h-44 bg-gray-100 overflow-hidden">
                   <Image
                     src={service.image}
                     alt={service.title}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                   />
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="text-[#0A1E3F] font-bold text-base mb-3 leading-snug">
+                <div className="p-3 sm:p-5 flex flex-col flex-1">
+                  <h3 className="text-[#0A1E3F] font-bold text-sm sm:text-base mb-2 sm:mb-3 leading-snug">
                     {service.title}
                   </h3>
 
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
                     {service.tags.map((tag, i) => (
                       <span
                         key={i}
-                        className="text-xs border border-gray-200 text-[#6B7280] px-2.5 py-1 rounded-full"
+                        className="text-[10px] sm:text-xs border border-gray-200 text-[#6B7280] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
 
-                  <p className="text-[#6B7280] text-sm leading-relaxed flex-1 mb-4">
+                  <p className="text-[#6B7280] text-xs sm:text-sm leading-relaxed flex-1 mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">
                     {service.description}
                   </p>
 
@@ -140,7 +140,7 @@ export default function Services({ showHeading = true, showMoreButton = true }: 
                     href="https://wa.me/6285211436032"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-[#25D366] hover:bg-[#20BD5A] text-white text-center py-2.5 rounded-lg font-bold text-sm transition-colors w-full"
+                    className="bg-[#25D366] hover:bg-[#20BD5A] text-white text-center py-2 sm:py-2.5 rounded-lg font-bold text-xs sm:text-sm transition-colors w-full"
                   >
                     <span className="flex items-center justify-center gap-2">
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
