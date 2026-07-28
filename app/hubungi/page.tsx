@@ -79,147 +79,127 @@ export default function HubungiPage() {
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      <main className="w-full max-w-[480px] px-6 pt-12 pb-24 flex flex-col gap-12">
-        {/* Header Branding & Intro */}
-        <section className="text-center space-y-4">
-          <Image
-            src="/logos-navbar/logo-sdbi-new.webp"
-            alt="Sekolah Digital Bisnis Indonesia"
-            width={220}
-            height={70}
-            className="h-20 w-auto mx-auto object-contain"
-            priority
-          />
-          <h2 className="text-3xl font-extrabold text-[#01072b] leading-tight">
-            Empowering Your Digital Growth
-          </h2>
-          <p className="text-[#46464e] text-sm leading-relaxed">
-            Jembatan profesional antara edukasi tradisional dan ekonomi digital masa kini.
-          </p>
-        </section>
+        <main className="w-full max-w-[480px] px-6 pt-12 pb-24 flex flex-col gap-12">
+          {/* Header Branding & Intro */}
+          <section className="text-center space-y-4">
+            <h2 className="text-3xl font-extrabold text-[#01072b] leading-tight">
+              Empowering Your Digital Growth
+            </h2>
+            <p className="text-[#46464e] text-sm leading-relaxed">
+              Jembatan profesional antara edukasi tradisional dan ekonomi digital masa kini.
+            </p>
+          </section>
 
-        {/* Highlight Layanan Section */}
-        <section className="bg-white rounded-xl overflow-hidden shadow-md border border-[#c6c5cf]/30 p-4 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-extrabold text-[#01072b]">Layanan Unggulan Kami</h3>
+          {/* Highlight Layanan Section */}
+          <section className="bg-white rounded-xl overflow-hidden shadow-md border border-[#c6c5cf]/30 p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-extrabold text-[#01072b]">Layanan Unggulan Kami</h3>
+              <Link
+                href="https://wa.me/6285211436032"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-[#feba42] text-[#171f42] rounded-full font-bold text-[10px] shadow-sm hover:opacity-90 transition-opacity uppercase tracking-wider"
+              >
+                Konsultasi
+              </Link>
+            </div>
+            <HubungiServiceScroller />
+          </section>
+
+          {/* Main Buttons Section */}
+          <section className="flex flex-col gap-3">
             <Link
               href="https://wa.me/6285211436032"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3 py-1.5 bg-[#feba42] text-[#171f42] rounded-full font-bold text-[10px] shadow-sm hover:opacity-90 transition-opacity uppercase tracking-wider"
+              className="group flex items-center justify-between p-5 bg-[#01072b] text-white rounded-xl shadow-md border-2 border-[#feba42] active:scale-[0.98] transition-transform"
             >
-              Konsultasi
-            </Link>
-          </div>
-          <HubungiServiceScroller />
-        </section>
-
-        {/* Main Buttons Section */}
-        <section className="flex flex-col gap-3">
-          <Link
-            href="https://wa.me/6285211436032"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center justify-between p-5 bg-[#01072b] text-white rounded-xl shadow-md border-2 border-[#feba42] active:scale-[0.98] transition-transform"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#feba42]/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                <span className="material-symbols-outlined text-[#feba42] text-3xl">chat</span>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#feba42]/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-[#feba42] text-3xl">chat</span>
+                </div>
+                <div>
+                  <div className="font-bold text-lg leading-tight">Konsultasi WhatsApp</div>
+                  <div className="text-[11px] text-[#bdc4f1]">Solusi Digital Personal & Cepat</div>
+                </div>
               </div>
-              <div>
-                <div className="font-bold text-lg leading-tight">Konsultasi WhatsApp</div>
-                <div className="text-[11px] text-[#bdc4f1]">Solusi Digital Personal & Cepat</div>
-              </div>
-            </div>
-            <span className="material-symbols-outlined text-[#feba42]">arrow_forward_ios</span>
-          </Link>
-
-          {mainLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-4 p-5 bg-white text-[#01072b] rounded-xl shadow-sm border border-[#c6c5cf]/30 hover:bg-[#ecf5fe] active:scale-[0.98] transition-colors"
-            >
-              <span className="material-symbols-outlined text-[#01072b]">{item.icon}</span>
-              <span className="font-bold flex-1 text-base">{item.label}</span>
-              <span className="material-symbols-outlined text-[#c6c5cf]">navigate_next</span>
+              <span className="material-symbols-outlined text-[#feba42]">arrow_forward_ios</span>
             </Link>
-          ))}
 
-          <Link
-            href={joinCommunityHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-4 p-5 bg-white text-[#01072b] rounded-xl shadow-sm border border-[#c6c5cf]/30 hover:bg-[#ecf5fe] active:scale-[0.98] transition-colors"
-          >
-            <span className="material-symbols-outlined text-[#01072b]">groups</span>
-            <span className="font-bold flex-1 text-base">Join Community</span>
-            <span className="material-symbols-outlined text-[#c6c5cf]">navigate_next</span>
-          </Link>
-        </section>
-
-        {/* Lokasi */}
-        <section className="space-y-4">
-          <h3 className="text-sm font-bold text-[#7f5600] flex items-center gap-2">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>
-              location_on
-            </span>
-            LOKASI KAMI
-          </h3>
-          <div className="rounded-xl overflow-hidden shadow-md border border-[#c6c5cf]/30 h-48">
-            <iframe
-              src="https://maps.google.com/maps?q=Sekolah+Digital+Bisnis+Indonesia+(SDBI+Digital+Marketing+Agency),+Graha+Multipiranti,+Jl.+Radin+Inten+II+No.2-8,+Duren+Sawit,+Jakarta+Timur+13440&output=embed"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Lokasi Kantor SDBI"
-            />
-          </div>
-          <p className="text-[#46464e] text-sm leading-relaxed">
-            Graha Multipiranti, Jl. Radin Inten II No.2-8, Duren Sawit, Jakarta Timur 13440
-          </p>
-        </section>
-
-        {/* Get In Touch */}
-        <section className="space-y-6 pt-4">
-          <div className="flex items-center gap-3">
-            <div className="h-[1px] flex-1 bg-[#c6c5cf]/30" />
-            <h4 className="text-xs font-bold text-[#76767f] uppercase tracking-widest text-center">
-              Get In Touch
-            </h4>
-            <div className="h-[1px] flex-1 bg-[#c6c5cf]/30" />
-          </div>
-
-          <div className="flex justify-center gap-6">
-            {socialLinks.map((social) => (
+            {mainLinks.map((item) => (
               <Link
-                key={social.name}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={social.name}
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-[#e6eff8] text-[#01072b] hover:bg-[#feba42] hover:text-[#704b00] transition-all"
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-4 p-5 bg-white text-[#01072b] rounded-xl shadow-sm border border-[#c6c5cf]/30 hover:bg-[#ecf5fe] active:scale-[0.98] transition-colors"
               >
-                {social.icon}
+                <span className="material-symbols-outlined text-[#01072b]">{item.icon}</span>
+                <span className="font-bold flex-1 text-base">{item.label}</span>
+                <span className="material-symbols-outlined text-[#c6c5cf]">navigate_next</span>
               </Link>
             ))}
-          </div>
 
-          <div className="grid gap-3">
             <Link
-              href="https://sekolahdigitalbisnis.com"
+              href={joinCommunityHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 p-3 bg-[#ecf5fe] text-[#01072b] rounded-lg text-sm font-bold border border-[#c6c5cf]/20"
+              className="flex items-center gap-4 p-5 bg-white text-[#01072b] rounded-xl shadow-sm border border-[#c6c5cf]/30 hover:bg-[#ecf5fe] active:scale-[0.98] transition-colors"
             >
-              <span className="material-symbols-outlined text-sm">language</span>
-              sekolahdigitalbisnis.com
+              <span className="material-symbols-outlined text-[#01072b]">groups</span>
+              <span className="font-bold flex-1 text-base">Join Community</span>
+              <span className="material-symbols-outlined text-[#c6c5cf]">navigate_next</span>
             </Link>
-          </div>
-        </section>
+          </section>
+
+          {/* Lokasi */}
+          <section className="space-y-4">
+            <h3 className="text-sm font-bold text-[#7f5600] flex items-center gap-2">
+              <span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>
+                location_on
+              </span>
+              LOKASI KAMI
+            </h3>
+            <div className="rounded-xl overflow-hidden shadow-md border border-[#c6c5cf]/30 h-48">
+              <iframe
+                src="https://maps.google.com/maps?q=Sekolah+Digital+Bisnis+Indonesia+(SDBI+Digital+Marketing+Agency),+Graha+Multipiranti,+Jl.+Radin+Inten+II+No.2-8,+Duren+Sawit,+Jakarta+Timur+13440&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Lokasi Kantor SDBI"
+              />
+            </div>
+            <p className="text-[#46464e] text-sm leading-relaxed">
+              Graha Multipiranti, Jl. Radin Inten II No.2-8, Duren Sawit, Jakarta Timur 13440
+            </p>
+          </section>
+
+          {/* Get In Touch */}
+          <section className="space-y-6 pt-4">
+            <div className="flex items-center gap-3">
+              <div className="h-[1px] flex-1 bg-[#c6c5cf]/30" />
+              <h4 className="text-xs font-bold text-[#76767f] uppercase tracking-widest text-center">
+                Get In Touch
+              </h4>
+              <div className="h-[1px] flex-1 bg-[#c6c5cf]/30" />
+            </div>
+
+            <div className="flex justify-center gap-6">
+              {socialLinks.map((social) => (
+                <Link
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  className="w-12 h-12 flex items-center justify-center rounded-full bg-[#e6eff8] text-[#01072b] hover:bg-[#feba42] hover:text-[#704b00] transition-all"
+                >
+                  {social.icon}
+                </Link>
+              ))}
+            </div>
+          </section>
         </main>
       </div>
       <Footer />

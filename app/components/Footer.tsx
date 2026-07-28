@@ -31,7 +31,7 @@ export default function Footer() {
               alt="Sekolah Digital Bisnis Indonesia"
               width={250}
               height={100}
-              className="h-auto w-40 object-contain mb-6"
+              className="h-auto w-40 object-contain mb-6 rounded-md"
             />
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
               Revenue Growth & Digital Transformation Partner untuk perusahaan, BUMN, dan institusi pendidikan di Indonesia.
