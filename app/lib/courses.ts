@@ -31,6 +31,8 @@ export interface Course {
   modules: CourseModule[];
   testimonials: CourseTestimonial[];
   updated: string;
+  /** YouTube unlisted / Google Drive folder link peserta setelah pembayaran lunas. */
+  videoAccessUrl: string;
 }
 
 export const courses: Course[] = [
@@ -83,6 +85,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
+    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_MASTERING_META_ADS",
   },
   {
     slug: "tiktok-content-creator-mastery",
@@ -132,6 +135,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
+    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_TIKTOK_CONTENT_CREATOR",
   },
   {
     slug: "optimasi-toko-shopee",
@@ -180,6 +184,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
+    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_OPTIMASI_TOKO_SHOPEE",
   },
   {
     slug: "copywriting-menjual",
@@ -228,6 +233,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
+    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_COPYWRITING_MENJUAL",
   },
   {
     slug: "sem-google-ads",
@@ -276,6 +282,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
+    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_SEM_GOOGLE_ADS",
   },
   {
     slug: "youtube-marketing",
@@ -324,6 +331,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
+    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_YOUTUBE_MARKETING",
   },
 ];
 

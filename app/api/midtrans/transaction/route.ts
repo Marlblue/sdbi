@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCourseBySlug } from '../../../lib/courses';
+import { createOrder, updateOrderStatus } from '../../../lib/orders';
 
 const IS_PRODUCTION = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true';
 const SNAP_API_URL = IS_PRODUCTION
   ? 'https://app.midtrans.com/snap/v1/transactions'
   : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: NextRequest) {
   const serverKey = process.env.MIDTRANS_SERVER_KEY;
@@ -12,7 +15,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Midtrans belum dikonfigurasi.' }, { status: 500 });
   }
 
-  let body: { slug?: unknown };
+  let body: { slug?: unknown; email?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -25,8 +28,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Kelas tidak ditemukan.' }, { status: 404 });
   }
 
+  const email = typeof body.email === 'string' ? body.email.trim() : '';
+  if (!EMAIL_REGEX.test(email)) {
+    return NextResponse.json({ error: 'Email tidak valid.' }, { status: 400 });
+  }
+
   // Price/name are looked up server-side from the slug so the client can't tamper with the amount charged.
   const orderId = `ECOURSE-${course.slug}-${Date.now()}`;
+
+  try {
+    await createOrder({
+      orderId,
+      slug: course.slug,
+      courseTitle: course.title,
+      amount: course.price,
+      customerEmail: email,
+    });
+  } catch (err) {
+    console.error('Order Create Error:', err);
+    return NextResponse.json({ error: 'Gagal menyimpan data order.' }, { status: 500 });
+  }
 
   try {
     const snapResponse = await fetch(SNAP_API_URL, {
@@ -51,6 +72,7 @@ export async function POST(request: NextRequest) {
         ],
         customer_details: {
           first_name: 'Peserta E-Course',
+          email,
         },
         callbacks: {
           finish: `https://sekolahdigitalbisnis.com/e-course/${course.slug}?status=selesai`,
@@ -62,6 +84,9 @@ export async function POST(request: NextRequest) {
 
     if (!snapResponse.ok) {
       console.error('Midtrans Error:', snapResponse.status, data);
+      await updateOrderStatus(orderId, 'failed').catch((err) =>
+        console.error('Order Status Update Error:', err)
+      );
       const message = Array.isArray(data?.error_messages)
         ? data.error_messages.join(', ')
         : 'Gagal membuat transaksi pembayaran.';
@@ -71,6 +96,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ token: data.token, redirectUrl: data.redirect_url, orderId });
   } catch (err) {
     console.error('Midtrans Fetch Error:', err);
+    await updateOrderStatus(orderId, 'failed').catch((updateErr) =>
+      console.error('Order Status Update Error:', updateErr)
+    );
     return NextResponse.json({ error: 'Tidak dapat terhubung ke layanan pembayaran.' }, { status: 502 });
   }
 }

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import StickyHeader from "../../components/StickyHeader";
 import Footer from "../../components/Footer";
 import AnimateOnScroll from "../../components/AnimateOnScroll";
+import BuyCourseButton from "../../components/BuyCourseButton";
 import {
   getAllCourses,
   getCourseBySlug,
@@ -45,10 +46,13 @@ export async function generateMetadata({
 
 export default async function CourseDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ status?: string }>;
 }) {
   const { slug } = await params;
+  const { status } = await searchParams;
   const course = getCourseBySlug(slug);
 
   if (!course) {
@@ -58,10 +62,17 @@ export default async function CourseDetailPage({
   const related = getRelatedCourses(slug, 3);
   const totalVideos = course.modules.reduce((sum, m) => sum + m.videoCount, 0);
   const discount = discountPercent(course.price, course.originalPrice);
-  // TODO: swap back to <BuyCourseButton slug={course.slug} .../> once the Midtrans merchant account is verified.
+  const checkoutEnabled = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === "true";
   const whatsappHref = `https://wa.me/6285211436032?text=${encodeURIComponent(
     `Halo, saya tertarik dengan kelas "${course.title}"`
   )}`;
+
+  const statusBanner =
+    status === "berhasil" || status === "selesai"
+      ? "Terima kasih! Kami sedang memverifikasi pembayaran Anda. Cek email Anda dalam beberapa menit untuk link akses kelas."
+      : status === "pending"
+      ? "Pembayaran Anda sedang diproses. Kami akan mengirim link akses kelas ke email Anda setelah pembayaran dikonfirmasi."
+      : null;
 
   return (
     <>
@@ -88,6 +99,11 @@ export default async function CourseDetailPage({
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+          {statusBanner && (
+            <div className="mb-8 bg-[#0A1E3F]/5 border border-[#0A1E3F]/10 text-[#0A1E3F] text-sm font-medium rounded-2xl px-6 py-4 text-center">
+              {statusBanner}
+            </div>
+          )}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             {/* Left Column */}
             <div className="lg:col-span-7">
@@ -158,7 +174,7 @@ export default async function CourseDetailPage({
 
             {/* Right Column: Sticky Purchase Card */}
             <div className="lg:col-span-5">
-              <div className="lg:sticky lg:top-28 bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
+              <div id="beli" className="lg:sticky lg:top-28 bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
                 <div className="mb-6">
                   <span className="text-sm font-bold text-gray-400 line-through">
                     {formatRupiah(course.originalPrice)}
@@ -171,14 +187,23 @@ export default async function CourseDetailPage({
                   </div>
                 </div>
 
-                <Link
-                  href={''}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full text-center bg-[#F5821F] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#F5821F]/90 hover:-translate-y-0.5 transition-all mb-6 shadow-md"
-                >
-                  Beli Sekarang
-                </Link>
+                {checkoutEnabled ? (
+                  <div className="mb-6">
+                    <BuyCourseButton
+                      slug={course.slug}
+                      className="block w-full text-center bg-[#F5821F] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#F5821F]/90 hover:-translate-y-0.5 transition-all shadow-md"
+                    />
+                  </div>
+                ) : (
+                  <Link
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full text-center bg-[#F5821F] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#F5821F]/90 hover:-translate-y-0.5 transition-all mb-6 shadow-md"
+                  >
+                    Beli Sekarang
+                  </Link>
+                )}
 
                 <div className="space-y-4 mb-8">
                   <div className="flex items-center gap-3 text-sm font-medium text-[#6B7280]">
@@ -338,14 +363,23 @@ export default async function CourseDetailPage({
               <p className="text-gray-300 mb-8 max-w-lg mx-auto relative z-10">
                 Amankan kelas {course.title} sekarang dan mulai terapkan strateginya untuk bisnis Anda.
               </p>
-              <Link
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative z-10 inline-block bg-[#F5821F] text-white px-8 py-3.5 rounded-xl font-bold hover:bg-[#F5821F]/90 transition-all duration-300 text-sm shadow-sm"
-              >
-                Beli Kelas Sekarang
-              </Link>
+              {checkoutEnabled ? (
+                <Link
+                  href="#beli"
+                  className="relative z-10 inline-block bg-[#F5821F] text-white px-8 py-3.5 rounded-xl font-bold hover:bg-[#F5821F]/90 transition-all duration-300 text-sm shadow-sm"
+                >
+                  Beli Kelas Sekarang
+                </Link>
+              ) : (
+                <Link
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative z-10 inline-block bg-[#F5821F] text-white px-8 py-3.5 rounded-xl font-bold hover:bg-[#F5821F]/90 transition-all duration-300 text-sm shadow-sm"
+                >
+                  Beli Kelas Sekarang
+                </Link>
+              )}
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#F5821F] opacity-10 rounded-full blur-3xl -mr-32 -mt-32" />
             </div>
           </div>

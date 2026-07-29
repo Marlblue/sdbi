@@ -26,17 +26,26 @@ const SNAP_SRC =
 
 const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? '';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 interface BuyCourseButtonProps {
   slug: string;
   className?: string;
 }
 
 export default function BuyCourseButton({ slug, className }: BuyCourseButtonProps) {
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const emailValid = EMAIL_REGEX.test(email.trim());
+
   const handleBuy = async () => {
     if (loading) return;
+    if (!emailValid) {
+      setError('Masukkan alamat email yang valid.');
+      return;
+    }
     setError(null);
     setLoading(true);
 
@@ -44,7 +53,7 @@ export default function BuyCourseButton({ slug, className }: BuyCourseButtonProp
       const res = await fetch('/api/midtrans/transaction', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify({ slug, email: email.trim() }),
       });
       const data = await res.json();
 
@@ -80,14 +89,29 @@ export default function BuyCourseButton({ slug, className }: BuyCourseButtonProp
   return (
     <div>
       <Script src={SNAP_SRC} data-client-key={MIDTRANS_CLIENT_KEY} strategy="afterInteractive" />
+      <label htmlFor={`email-${slug}`} className="block text-xs font-bold text-[#6B7280] mb-1.5">
+        Email untuk pengiriman akses kelas
+      </label>
+      <input
+        id={`email-${slug}`}
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="nama@email.com"
+        disabled={loading}
+        className="w-full mb-3 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5821F] disabled:opacity-60"
+      />
       <button
         type="button"
         onClick={handleBuy}
-        disabled={loading}
+        disabled={loading || !emailValid}
         className={`${className ?? ''} disabled:opacity-60 disabled:cursor-not-allowed`}
       >
         {loading ? 'Memproses...' : 'Beli Sekarang'}
       </button>
+      <p className="text-[11px] text-[#6B7280] mt-2 text-center">
+        Link akses kelas akan dikirim ke email ini setelah pembayaran dikonfirmasi.
+      </p>
       {error && <p className="text-red-500 text-xs mt-2 text-center">{error}</p>}
     </div>
   );
