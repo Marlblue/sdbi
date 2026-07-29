@@ -1,5 +1,23 @@
 import articlesData from "./articles-data.json";
 
+export type ArticleFaq = {
+  question: string;
+  answer: string;
+};
+
+export type ArticleSeo = {
+  seoTitle?: string;
+  metaDescription?: string;
+  focusKeyword?: string;
+  secondaryKeywords?: string[];
+  imageAlt?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  faq?: ArticleFaq[];
+};
+
 export type Article = {
   slug: string;
   title: string;
@@ -10,6 +28,7 @@ export type Article = {
   category: string;
   tags: string[];
   readTime: string;
+  seo?: ArticleSeo;
 };
 
 export const articles: Article[] = [...(articlesData.articles as Article[])].sort(
@@ -26,6 +45,11 @@ export function getArticleBySlug(slug: string): Article | undefined {
 
 export function getLatestArticles(count: number): Article[] {
   return articles.slice(0, count);
+}
+
+export function getArticlesByTag(tag: string): Article[] {
+  const normalized = tag.trim().toLowerCase();
+  return articles.filter((a) => a.tags.some((t) => t.trim().toLowerCase() === normalized));
 }
 
 export function formatTanggal(dateStr: string): string {

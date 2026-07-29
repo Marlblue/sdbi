@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { marked } from "marked";
-import { getAllArticles, getArticleBySlug, formatTanggal, getLatestArticles } from "../lib/articles";
+import { getAllArticles, getArticleBySlug, formatTanggal, getLatestArticles, type ArticleFaq } from "../lib/articles";
 import StickyHeader from "../components/StickyHeader";
 import Footer from "../components/Footer";
 
@@ -20,21 +20,33 @@ export async function generateMetadata({
   const article = getArticleBySlug(slug);
   if (!article) return {};
 
+  const seo = article.seo || {};
+  const metaTitle = seo.seoTitle || article.title;
+  const metaDescription = seo.metaDescription || article.excerpt;
+  const ogTitle = seo.ogTitle || metaTitle;
+  const ogDescription = seo.ogDescription || metaDescription;
+  const twitterTitle = seo.twitterTitle || ogTitle;
+  const twitterDescription = seo.twitterDescription || ogDescription;
+  const keywords = [seo.focusKeyword, ...(seo.secondaryKeywords || [])].filter(
+    (k): k is string => Boolean(k && k.trim())
+  );
+
   return {
-    title: `${article.title} | SDBI`,
-    description: article.excerpt,
+    title: `${metaTitle} | SDBI`,
+    description: metaDescription,
+    keywords: keywords.length > 0 ? keywords : undefined,
     openGraph: {
-      title: article.title,
-      description: article.excerpt,
+      title: ogTitle,
+      description: ogDescription,
       url: `https://sekolahdigitalbisnis.com/${article.slug}`,
-      images: [{ url: article.image, width: 1200, height: 630 }],
+      images: [{ url: article.image, width: 1200, height: 630, alt: seo.imageAlt || article.title }],
       type: "article",
       locale: "id_ID",
     },
     twitter: {
       card: "summary_large_image",
-      title: article.title,
-      description: article.excerpt,
+      title: twitterTitle,
+      description: twitterDescription,
       images: [article.image],
     },
   };
@@ -93,7 +105,7 @@ export default async function ArticlePage({
           <div className="relative w-full h-56 md:h-96 rounded-2xl overflow-hidden shadow-lg bg-gray-100">
             <Image
               src={article.image}
-              alt={article.title}
+              alt={article.seo?.imageAlt || article.title}
               fill
               sizes="(max-width: 768px) 100vw, 768px"
               className="object-cover"
@@ -112,16 +124,37 @@ export default async function ArticlePage({
           {article.tags.length > 0 && (
             <div className="mt-10 pt-6 border-t border-gray-200 flex flex-wrap gap-2">
               {article.tags.map((tag) => (
-                <span
+                <Link
                   key={tag}
-                  className="text-xs bg-gray-100 text-[#6B7280] px-3 py-1.5 rounded-full"
+                  href={`/blog?tag=${encodeURIComponent(tag)}`}
+                  className="text-xs bg-gray-100 text-[#6B7280] px-3 py-1.5 rounded-full hover:bg-[#F5821F] hover:text-white transition-colors"
                 >
                   #{tag}
-                </span>
+                </Link>
               ))}
             </div>
           )}
         </article>
+
+        {article.seo?.faq && article.seo.faq.length > 0 && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: article.seo.faq.map((item: ArticleFaq) => ({
+                  "@type": "Question",
+                  name: item.question,
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: item.answer,
+                  },
+                })),
+              }),
+            }}
+          />
+        )}
 
         {/* CTA */}
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">

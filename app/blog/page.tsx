@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getAllArticles, formatTanggal } from "../lib/articles";
+import { getAllArticles, getArticlesByTag, formatTanggal } from "../lib/articles";
 import StickyHeader from "../components/StickyHeader";
 import Footer from "../components/Footer";
 import AnimateOnScroll from "../components/AnimateOnScroll";
@@ -16,8 +16,13 @@ const categoryColors: Record<string, string> = {
   default: "bg-[#0A1E3F]",
 };
 
-export default function BlogPage() {
-  const articles = getAllArticles();
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string }>;
+}) {
+  const { tag } = await searchParams;
+  const articles = tag ? getArticlesByTag(tag) : getAllArticles();
 
   return (
     <>
@@ -35,7 +40,27 @@ export default function BlogPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <p className="text-sm text-[#6B7280] mb-8">{articles.length} artikel</p>
+          {tag ? (
+            <div className="flex items-center flex-wrap gap-3 mb-8">
+              <p className="text-sm text-[#6B7280]">
+                Menampilkan {articles.length} artikel dengan tag{" "}
+                <span className="font-semibold text-[#0A1E3F]">#{tag}</span>
+              </p>
+              <Link
+                href="/blog"
+                className="text-xs bg-gray-100 text-[#6B7280] px-3 py-1.5 rounded-full hover:bg-[#F5821F] hover:text-white transition-colors"
+              >
+                Hapus filter ✕
+              </Link>
+            </div>
+          ) : (
+            <p className="text-sm text-[#6B7280] mb-8">{articles.length} artikel</p>
+          )}
+          {articles.length === 0 && (
+            <p className="text-sm text-[#6B7280] mb-8">
+              Belum ada artikel dengan tag ini.
+            </p>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map((article, index) => (
               <AnimateOnScroll key={article.slug} animation="fade-in-up" delay={(index % 3) * 100} duration={600}>
