@@ -15,7 +15,6 @@ export default function MediaCoverage() {
   const newsArticles = [
     {
       source: 'tvOnenews.com',
-      date: '15 Desember 2024',
       title: 'Bank Indonesia Kolaborasi dengan BKKBN Beri Edukasi Keuangan Inklusif ke Masyarakat',
       quote: 'Kolaborasi ini diawali dalam acara bertajuk "Edukasi Keuangan Inklusif, Perlindungan Konsumen, dan Pemasaran Digital untuk Pemberdayaan Ekonomi Keluarga" yang berlangsung di Sheraton Tunjungan Plaza Surabaya.',
       gradient: 'from-red-500 to-red-700',
@@ -24,7 +23,6 @@ export default function MediaCoverage() {
     },
     {
       source: 'mnctrijaya.com',
-      date: '21 Desember 2024',
       title: 'Yoso Lukito Berkolaborasi dengan BPJS Ketenagakerjaan Jabar: Tingkatkan Kompetensi Digital Marketing di Era Digital',
       quote: 'Dalam sesi yang dinantikan tersebut, Coach Yoso Lukito founder Sekolah Digital Bisnis Indonesia, seorang Google Certified Digital Marketing Expert, hadir sebagai salah satu pembicara dalam acara "Social Media Winning".',
       gradient: 'from-blue-500 to-blue-700',
@@ -33,7 +31,6 @@ export default function MediaCoverage() {
     },
     {
       source: 'Warta Ekonomi',
-      date: '24 Agustus 2024',
       title: 'Kolaborasi Yoso Lukito Sekolah Digital Bisnis Indonesia (SDBI) Bersama KPMI: Strategi Pemasaran Digital untuk Para Pebisnis',
       quote: '"Kami berusaha memberikan wawasan yang aplikatif dan mudah dipahami, sehingga para Muslimat dapat meraih peluang bisnis digital yang lebih besar di era kompetisi global ini."',
       gradient: 'from-amber-500 to-orange-700',
@@ -98,7 +95,6 @@ export default function MediaCoverage() {
                 {/* Source bar */}
                 <div className={`bg-gradient-to-r ${article.gradient} px-4 py-3 flex items-center justify-between`}>
                   <span className="text-white font-bold text-sm">{article.source}</span>
-                  <span className="text-white/80 text-xs">{article.date}</span>
                 </div>
 
                 {/* Content */}
