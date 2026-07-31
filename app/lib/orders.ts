@@ -7,7 +7,9 @@ export interface Order {
   slug: string;
   courseTitle: string;
   amount: number;
+  customerName: string;
   customerEmail: string;
+  customerPhone: string;
   status: OrderStatus;
   accessToken: string | null;
   accessExpiresAt: string | null;
@@ -20,7 +22,9 @@ interface OrderRow {
   slug: string;
   course_title: string;
   amount: number;
+  customer_name: string | null;
   customer_email: string;
+  customer_phone: string | null;
   status: OrderStatus;
   access_token: string | null;
   access_expires_at: string | null;
@@ -34,7 +38,9 @@ function fromRow(row: OrderRow): Order {
     slug: row.slug,
     courseTitle: row.course_title,
     amount: row.amount,
+    customerName: row.customer_name ?? '',
     customerEmail: row.customer_email,
+    customerPhone: row.customer_phone ?? '',
     status: row.status,
     accessToken: row.access_token,
     accessExpiresAt: row.access_expires_at,
@@ -48,7 +54,9 @@ export async function createOrder(input: {
   slug: string;
   courseTitle: string;
   amount: number;
+  customerName: string;
   customerEmail: string;
+  customerPhone: string;
 }): Promise<void> {
   const supabase = getSupabaseAdmin();
   const { error } = await supabase.from('orders').insert({
@@ -56,7 +64,9 @@ export async function createOrder(input: {
     slug: input.slug,
     course_title: input.courseTitle,
     amount: input.amount,
+    customer_name: input.customerName,
     customer_email: input.customerEmail,
+    customer_phone: input.customerPhone,
     status: 'pending',
   });
   if (error) throw new Error(`Gagal menyimpan order: ${error.message}`);

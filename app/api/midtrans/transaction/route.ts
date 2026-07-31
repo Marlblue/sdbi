@@ -8,6 +8,7 @@ const SNAP_API_URL = IS_PRODUCTION
   : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_REGEX = /^(\+62|62|0)8[0-9]{7,11}$/;
 
 export async function POST(request: NextRequest) {
   const serverKey = process.env.MIDTRANS_SERVER_KEY;
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Midtrans belum dikonfigurasi.' }, { status: 500 });
   }
 
-  let body: { slug?: unknown; email?: unknown };
+  let body: { slug?: unknown; name?: unknown; email?: unknown; phone?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -28,9 +29,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Kelas tidak ditemukan.' }, { status: 404 });
   }
 
+  const name = typeof body.name === 'string' ? body.name.trim() : '';
+  if (name.length < 2) {
+    return NextResponse.json({ error: 'Nama tidak valid.' }, { status: 400 });
+  }
+
   const email = typeof body.email === 'string' ? body.email.trim() : '';
   if (!EMAIL_REGEX.test(email)) {
     return NextResponse.json({ error: 'Email tidak valid.' }, { status: 400 });
+  }
+
+  const phone = typeof body.phone === 'string' ? body.phone.trim().replace(/[\s-]/g, '') : '';
+  if (!PHONE_REGEX.test(phone)) {
+    return NextResponse.json({ error: 'Nomor WhatsApp tidak valid.' }, { status: 400 });
   }
 
   // Price/name are looked up server-side from the slug so the client can't tamper with the amount charged.
@@ -42,7 +53,9 @@ export async function POST(request: NextRequest) {
       slug: course.slug,
       courseTitle: course.title,
       amount: course.price,
+      customerName: name,
       customerEmail: email,
+      customerPhone: phone,
     });
   } catch (err) {
     console.error('Order Create Error:', err);
@@ -71,8 +84,9 @@ export async function POST(request: NextRequest) {
           },
         ],
         customer_details: {
-          first_name: 'Peserta E-Course',
+          first_name: name,
           email,
+          phone,
         },
         callbacks: {
           finish: `https://sekolahdigitalbisnis.com/e-course/${course.slug}?status=selesai`,

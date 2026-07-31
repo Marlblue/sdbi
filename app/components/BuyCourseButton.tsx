@@ -27,6 +27,7 @@ const SNAP_SRC =
 const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? '';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_REGEX = /^(\+62|62|0)8[0-9]{7,11}$/;
 
 interface BuyCourseButtonProps {
   slug: string;
@@ -34,16 +35,29 @@ interface BuyCourseButtonProps {
 }
 
 export default function BuyCourseButton({ slug, className }: BuyCourseButtonProps) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const nameValid = name.trim().length >= 2;
   const emailValid = EMAIL_REGEX.test(email.trim());
+  const phoneValid = PHONE_REGEX.test(phone.trim().replace(/[\s-]/g, ''));
+  const formValid = nameValid && emailValid && phoneValid;
 
   const handleBuy = async () => {
     if (loading) return;
+    if (!nameValid) {
+      setError('Masukkan nama lengkap Anda.');
+      return;
+    }
     if (!emailValid) {
       setError('Masukkan alamat email yang valid.');
+      return;
+    }
+    if (!phoneValid) {
+      setError('Masukkan nomor WhatsApp yang valid (contoh: 081234567890).');
       return;
     }
     setError(null);
@@ -53,7 +67,12 @@ export default function BuyCourseButton({ slug, className }: BuyCourseButtonProp
       const res = await fetch('/api/midtrans/transaction', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug, email: email.trim() }),
+        body: JSON.stringify({
+          slug,
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim().replace(/[\s-]/g, ''),
+        }),
       });
       const data = await res.json();
 
@@ -89,6 +108,18 @@ export default function BuyCourseButton({ slug, className }: BuyCourseButtonProp
   return (
     <div>
       <Script src={SNAP_SRC} data-client-key={MIDTRANS_CLIENT_KEY} strategy="afterInteractive" />
+      <label htmlFor={`name-${slug}`} className="block text-xs font-bold text-[#6B7280] mb-1.5">
+        Nama Lengkap
+      </label>
+      <input
+        id={`name-${slug}`}
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Nama Anda"
+        disabled={loading}
+        className="w-full mb-3 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5821F] disabled:opacity-60"
+      />
       <label htmlFor={`email-${slug}`} className="block text-xs font-bold text-[#6B7280] mb-1.5">
         Email untuk pengiriman akses kelas
       </label>
@@ -101,10 +132,22 @@ export default function BuyCourseButton({ slug, className }: BuyCourseButtonProp
         disabled={loading}
         className="w-full mb-3 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5821F] disabled:opacity-60"
       />
+      <label htmlFor={`phone-${slug}`} className="block text-xs font-bold text-[#6B7280] mb-1.5">
+        Nomor WhatsApp
+      </label>
+      <input
+        id={`phone-${slug}`}
+        type="tel"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        placeholder="081234567890"
+        disabled={loading}
+        className="w-full mb-3 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5821F] disabled:opacity-60"
+      />
       <button
         type="button"
         onClick={handleBuy}
-        disabled={loading || !emailValid}
+        disabled={loading || !formValid}
         className={`${className ?? ''} disabled:opacity-60 disabled:cursor-not-allowed`}
       >
         {loading ? 'Memproses...' : 'Beli Sekarang'}
