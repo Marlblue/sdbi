@@ -10,6 +10,7 @@ export interface Order {
   customerEmail: string;
   status: OrderStatus;
   accessToken: string | null;
+  accessExpiresAt: string | null;
   createdAt: string;
   paidAt: string | null;
 }
@@ -22,6 +23,7 @@ interface OrderRow {
   customer_email: string;
   status: OrderStatus;
   access_token: string | null;
+  access_expires_at: string | null;
   created_at: string;
   paid_at: string | null;
 }
@@ -35,6 +37,7 @@ function fromRow(row: OrderRow): Order {
     customerEmail: row.customer_email,
     status: row.status,
     accessToken: row.access_token,
+    accessExpiresAt: row.access_expires_at,
     createdAt: row.created_at,
     paidAt: row.paid_at,
   };
@@ -67,9 +70,18 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus): P
 
 export async function markOrderPaid(orderId: string, accessToken: string): Promise<void> {
   const supabase = getSupabaseAdmin();
+  const paidAt = new Date();
+  const accessExpiresAt = new Date(paidAt);
+  accessExpiresAt.setFullYear(accessExpiresAt.getFullYear() + 1);
+
   const { error } = await supabase
     .from('orders')
-    .update({ status: 'paid', paid_at: new Date().toISOString(), access_token: accessToken })
+    .update({
+      status: 'paid',
+      paid_at: paidAt.toISOString(),
+      access_token: accessToken,
+      access_expires_at: accessExpiresAt.toISOString(),
+    })
     .eq('order_id', orderId);
   if (error) throw new Error(`Gagal menandai order lunas: ${error.message}`);
 }
@@ -86,4 +98,23 @@ export async function getOrderByAccessToken(token: string): Promise<Order | null
   const { data, error } = await supabase.from('orders').select('*').eq('access_token', token).maybeSingle();
   if (error) throw new Error(`Gagal mengambil order: ${error.message}`);
   return data ? fromRow(data as OrderRow) : null;
+}
+
+export function isAccessExpired(order: Order): boolean {
+  if (!order.accessExpiresAt) return false;
+  return new Date(order.accessExpiresAt).getTime() < Date.now();
+}
+
+export async function logAccess(
+  orderId: string,
+  ipAddress: string | null,
+  userAgent: string | null
+): Promise<void> {
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.from('access_logs').insert({
+    order_id: orderId,
+    ip_address: ipAddress,
+    user_agent: userAgent,
+  });
+  if (error) throw new Error(`Gagal mencatat log akses: ${error.message}`);
 }
