@@ -1,5 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const FONNTE_TARGET = process.env.FONNTE_TARGET || '6285211436032';
+
+async function sendFonnteNotification({
+  nama,
+  phone,
+  email,
+  layanan,
+  sumber,
+  page,
+}: {
+  nama: string;
+  phone: string;
+  email: string;
+  layanan: string;
+  sumber: string;
+  page: string;
+}) {
+  const token = process.env.FONNTE_TOKEN;
+  if (!token) {
+    console.error('FONNTE_TOKEN belum diset — notifikasi WhatsApp tidak terkirim.');
+    return;
+  }
+
+  const message =
+    `*Lead Baru dari Website SDBI*\n\n` +
+    `Nama: ${nama}\n` +
+    `WhatsApp: ${phone || '-'}\n` +
+    `Email: ${email || '-'}\n` +
+    `Layanan: ${layanan || '-'}\n` +
+    `Sumber: ${sumber || '-'}\n` +
+    `Halaman: ${page || '-'}`;
+
+  try {
+    const res = await fetch('https://api.fonnte.com/send', {
+      method: 'POST',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({ target: FONNTE_TARGET, message }),
+    });
+
+    if (!res.ok) {
+      console.error('Fonnte Error:', res.status, await res.text());
+    }
+  } catch (err) {
+    console.error('Fonnte Fetch Error:', err);
+  }
+}
+
 export async function POST(request: NextRequest) {
   const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
 
@@ -22,6 +72,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Nama tidak boleh kosong.' }, { status: 400 });
   }
   const phone = typeof body.phone === 'string' ? body.phone.trim() : '';
+  const email = typeof body.email === 'string' ? body.email : '';
+  const layanan = typeof body.layanan === 'string' ? body.layanan : '';
+  const sumber = typeof body.sumber === 'string' ? body.sumber : '';
+  const page = typeof body.page === 'string' ? body.page : '';
+
+  sendFonnteNotification({ nama, phone, email, layanan, sumber, page });
 
   try {
     const scriptResponse = await fetch(webhookUrl, {
@@ -30,11 +86,11 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         nama: nama || '-',
         phone: phone || '-',
-        page: typeof body.page === 'string' ? body.page : '',
+        page,
         timestamp: new Date().toISOString(),
-        email: typeof body.email === 'string' ? body.email : '',
-        layanan: typeof body.layanan === 'string' ? body.layanan : '',
-        sumber: typeof body.sumber === 'string' ? body.sumber : '',
+        email,
+        layanan,
+        sumber,
       }),
       // Vercel Kadang rewel dengan redirect, kita set manual
       redirect: 'manual', 
