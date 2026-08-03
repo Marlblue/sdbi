@@ -1,10 +1,35 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Counter from './Counter';
 import HeroImageSlider from './HeroImageSlider';
 
 export default function Hero() {
+  const [sparkInView, setSparkInView] = useState(false);
+  const [lineLength, setLineLength] = useState<number | null>(null);
+  const sparkRef = useRef<SVGSVGElement>(null);
+  const lineRef = useRef<SVGPolylineElement>(null);
+
+  useLayoutEffect(() => {
+    if (lineRef.current) setLineLength(lineRef.current.getTotalLength());
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setSparkInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sparkRef.current) observer.observe(sparkRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const stats = [
     {
       end: 500,
@@ -42,10 +67,6 @@ export default function Hero() {
       {/* White overlay */}
       <div className="absolute inset-0 bg-white/40 z-0" />
       <style>{`
-        @keyframes drawLine {
-          from { stroke-dashoffset: 150; }
-          to { stroke-dashoffset: 0; }
-        }
         @keyframes fadeArea {
           from { opacity: 0; }
           to { opacity: 1; }
@@ -70,14 +91,11 @@ export default function Hero() {
             transform: scale(1);
           }
         }
-        .animate-draw-line {
-          stroke-dasharray: 150;
-          stroke-dashoffset: 150;
-          animation: drawLine 1.5s ease-out 1.1s forwards;
-        }
-        .animate-fade-area {
+        .spark-area {
           opacity: 0;
-          animation: fadeArea 1.5s ease-out 1.1s forwards;
+        }
+        .spark-area.in-view {
+          animation: fadeArea 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s forwards;
         }
         .reveal {
           opacity: 0;
@@ -187,7 +205,7 @@ export default function Hero() {
                     Avg. Increase in Leads
                   </p>
                   {/* Mini sparkline */}
-                  <svg className="w-full h-5 md:h-8 mt-1" viewBox="0 0 100 30" preserveAspectRatio="none">
+                  <svg ref={sparkRef} className="w-full h-5 md:h-8 mt-1" viewBox="0 0 100 30" preserveAspectRatio="none">
                     <defs>
                       <linearGradient id="gradient-hero" x1="0%" y1="0%" x2="0%" y2="100%">
                         <stop offset="0%" stopColor="#0A1E3F" stopOpacity="0.2" />
@@ -195,16 +213,23 @@ export default function Hero() {
                       </linearGradient>
                     </defs>
                     <polyline
-                      className="animate-draw-line"
+                      ref={lineRef}
                       points="0,25 15,20 30,22 45,15 60,18 75,8 90,10 100,2"
                       fill="none"
                       stroke="#0A1E3F"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
+                      style={{
+                        strokeDasharray: lineLength ?? 150,
+                        strokeDashoffset: sparkInView ? 0 : lineLength ?? 150,
+                        transition: lineLength
+                          ? 'stroke-dashoffset 2s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                          : 'none',
+                      }}
                     />
                     <polyline
-                      className="animate-fade-area"
+                      className={`spark-area ${sparkInView ? 'in-view' : ''}`}
                       points="0,25 15,20 30,22 45,15 60,18 75,8 90,10 100,2 100,30 0,30"
                       fill="url(#gradient-hero)"
                     />
