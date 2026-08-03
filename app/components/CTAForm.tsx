@@ -257,7 +257,7 @@ export default function CTAForm() {
                                 className="w-5 h-3.5 object-cover rounded-sm shrink-0"
                               />
                               <span className="flex-1 truncate text-gray-700">{c.name}</span>
-                              <span className="text-gray-400">+{c.dial}</span>
+                              <span className="text-gray-500">+{c.dial}</span>
                             </button>
                           ))}
                         </div>
@@ -285,12 +285,13 @@ export default function CTAForm() {
                   <div className="relative">
                     <select
                       ref={layananRef}
+                      aria-label="Pilih Pelayanan Sekolah Digital Bisnis Indonesia"
                       value={formData.layanan}
                       onChange={(e) => {
                         setFormData({ ...formData, layanan: e.target.value });
                         if (errors.layanan) setErrors({ ...errors, layanan: undefined });
                       }}
-                      className={`w-full border-b-2 ${errors.layanan ? 'border-red-400' : 'border-gray-200'} focus:border-[#0A1E3F] py-3 px-1 text-sm outline-none transition-colors text-gray-400 bg-transparent appearance-none`}
+                      className={`w-full border-b-2 ${errors.layanan ? 'border-red-400' : 'border-gray-200'} focus:border-[#0A1E3F] py-3 px-1 text-sm outline-none transition-colors text-gray-600 bg-transparent appearance-none`}
                     >
                       <option value="">Pilih Pelayanan Sekolah Digital Bisnis Indonesia</option>
                       <option value="digital-marketing">Digital Marketing Management</option>
@@ -311,9 +312,10 @@ export default function CTAForm() {
                   {/* Dropdown - Sumber */}
                   <div className="relative">
                     <select
+                      aria-label="Dimana mengetahui tentang Sekolah Digital Bisnis Indonesia"
                       value={formData.sumber}
                       onChange={(e) => setFormData({ ...formData, sumber: e.target.value })}
-                      className="w-full border-b-2 border-gray-200 focus:border-[#0A1E3F] py-3 px-1 text-sm outline-none transition-colors text-gray-400 bg-transparent appearance-none"
+                      className="w-full border-b-2 border-gray-200 focus:border-[#0A1E3F] py-3 px-1 text-sm outline-none transition-colors text-gray-600 bg-transparent appearance-none"
                     >
                       <option value="">Dimana mengetahui tentang Sekolah Digital Bisnis Indonesia</option>
                       <option value="google">Google Search</option>

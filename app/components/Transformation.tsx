@@ -354,7 +354,7 @@ export default function Transformation() {
                   {/* Info */}
                   <h4 className="text-gray-900 font-bold text-sm">{person.name}</h4>
                   {person.role && <p className="text-gray-500 text-xs mt-0.5">{person.role}</p>}
-                  <p className="text-gray-400 text-xs font-medium">{person.org}</p>
+                  <p className="text-gray-500 text-xs font-medium">{person.org}</p>
                 </div>
               ))}
             </div>

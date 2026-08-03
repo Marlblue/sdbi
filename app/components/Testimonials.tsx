@@ -273,7 +273,7 @@ export default function Testimonials() {
                   />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-[#0A1E3F]">{item.name}</h4>
+                  <h3 className="font-bold text-sm text-[#0A1E3F]">{item.name}</h3>
                   <p className="text-xs text-[#6B7280] uppercase tracking-wider">{item.industry}</p>
                 </div>
               </div>
@@ -293,9 +293,13 @@ export default function Testimonials() {
               key={index}
               onClick={() => goToSlide(index)}
               aria-label={`Ke testimoni ${index + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 ${activeSlide === index ? 'w-6 bg-[#0A1E3F]' : 'w-2 bg-gray-300'
-                }`}
-            />
+              className="h-6 min-w-6 flex items-center justify-center px-0.5"
+            >
+              <span
+                className={`h-2 rounded-full transition-all duration-300 ${activeSlide === index ? 'w-6 bg-[#0A1E3F]' : 'w-2 bg-gray-300'
+                  }`}
+              />
+            </button>
           ))}
         </div>
       </div>

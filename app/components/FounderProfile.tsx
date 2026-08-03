@@ -49,13 +49,18 @@ export default function FounderProfile() {
             {/* Credentials */}
             <ul className="space-y-2.5 mb-5">
               {credentials.map((cred, index) => (
-                <AnimateOnScroll key={index} animation="fade-in-up" delay={200 + index * 80} duration={500}>
-                  <li className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-[#0A1E3F] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-                    </svg>
-                    <span className="text-sm font-bold text-black">{cred}</span>
-                  </li>
+                <AnimateOnScroll
+                  key={index}
+                  as="li"
+                  animation="fade-in-up"
+                  delay={200 + index * 80}
+                  duration={500}
+                  className="flex items-start gap-3"
+                >
+                  <svg className="w-5 h-5 text-[#0A1E3F] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                  </svg>
+                  <span className="text-sm font-bold text-black">{cred}</span>
                 </AnimateOnScroll>
               ))}
             </ul>

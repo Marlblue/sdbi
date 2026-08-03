@@ -173,12 +173,16 @@ export default function Gallery() {
             <button
               key={i}
               onClick={() => setCurrentSlide(Math.min(i * itemsPerView, maxSlide))}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${currentPage === i
-                ? 'bg-[#0A1E3F] scale-125'
-                : 'bg-[#0A1E3F]/25 hover:bg-[#0A1E3F]/50'
-                }`}
+              className="group w-6 h-6 flex items-center justify-center"
               aria-label={`Go to page ${i + 1}`}
-            />
+            >
+              <span
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${currentPage === i
+                  ? 'bg-[#0A1E3F] scale-125'
+                  : 'bg-[#0A1E3F]/25 group-hover:bg-[#0A1E3F]/50'
+                  }`}
+              />
+            </button>
           ))}
         </div>
       </div>

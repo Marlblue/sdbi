@@ -19,20 +19,22 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <StickyHeader />
-      <Hero />
-      <TrustedBy />
-      <WhyChooseUs />
-      <Services />
-      <PartnerBadges />
-      <Portfolio />
-      <FounderProfile />
-      <Gallery />
-      <Transformation />
-      <Testimonials />
-      <CTAForm />
-      <MediaCoverage />
-      <FAQ />
-      <Articles />
+      <main>
+        <Hero />
+        <TrustedBy />
+        <WhyChooseUs />
+        <Services />
+        <PartnerBadges />
+        <Portfolio />
+        <FounderProfile />
+        <Gallery />
+        <Transformation />
+        <Testimonials />
+        <CTAForm />
+        <MediaCoverage />
+        <FAQ />
+        <Articles />
+      </main>
       <Footer />
     </div>
   );

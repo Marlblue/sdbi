@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   images: {
     qualities: [75, 90],
   },
+  async headers() {
+    return [
+      {
+        source: "/:all*(webp|jpg|jpeg|png|gif|svg|ico|woff|woff2)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Legacy WordPress tag/category archive pages -> blog listing
