@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import StickyHeader from '../../components/StickyHeader';
 import Footer from '../../components/Footer';
 import { getOrderByAccessToken, isAccessExpired, logAccess } from '../../lib/orders';
-import { getCourseBySlug } from '../../lib/courses';
+import { getCourseBySlug, getCourseDriveUrl } from '../../lib/courses';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,13 +65,27 @@ export default async function AksesPage({
                 Terima kasih telah membeli kelas ini. Klik tombol di bawah untuk mulai belajar.
               </p>
               {maskedEmail && (
-                <p className="text-xs text-[#6B7280] mb-6">
-                  Akses ini terdaftar untuk: <strong>{maskedEmail}</strong>. Materi untuk penggunaan
-                  pribadi, mohon tidak disebarluaskan.
-                </p>
+                <div className="text-sm text-[#0A1E3F] bg-[#0A1E3F]/5 border border-[#0A1E3F]/10 rounded-xl px-5 py-4 mb-6 text-left">
+                  <p className="font-bold mb-1">Penting sebelum membuka materi:</p>
+                  <p className="text-[#6B7280]">
+                    Video ini hanya bisa diakses jika Anda login Google dengan email{' '}
+                    <strong className="text-[#0A1E3F]">{maskedEmail}</strong>. Jika belum login dengan
+                    email tersebut, silakan buka{' '}
+                    <a
+                      href="https://accounts.google.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline font-medium"
+                    >
+                      accounts.google.com
+                    </a>{' '}
+                    dan login dulu sebelum klik tombol di bawah. Materi untuk penggunaan pribadi, mohon
+                    tidak disebarluaskan.
+                  </p>
+                </div>
               )}
               <a
-                href={course.videoAccessUrl}
+                href={getCourseDriveUrl(course.driveFileId)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-[#F5821F] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#F5821F]/90 hover:-translate-y-0.5 transition-all shadow-md"

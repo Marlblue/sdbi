@@ -31,8 +31,13 @@ export interface Course {
   modules: CourseModule[];
   testimonials: CourseTestimonial[];
   updated: string;
-  /** YouTube unlisted / Google Drive folder link peserta setelah pembayaran lunas. */
-  videoAccessUrl: string;
+  /**
+   * ID folder Google Drive (bukan URL) berisi seluruh video modul kelas ini,
+   * shared dengan setting "Restricted". Akses diberikan per-email lewat
+   * grantDriveAccess() di app/lib/googleDrive.ts setelah pembayaran lunas —
+   * satu grant ke folder ini otomatis mencakup semua video di dalamnya.
+   */
+  driveFileId: string;
 }
 
 export const courses: Course[] = [
@@ -85,7 +90,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
-    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_MASTERING_META_ADS",
+    driveFileId: "REPLACE_MASTERING_META_ADS_FOLDER_ID",
   },
   {
     slug: "tiktok-content-creator-mastery",
@@ -135,7 +140,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
-    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_TIKTOK_CONTENT_CREATOR",
+    driveFileId: "REPLACE_TIKTOK_CONTENT_CREATOR_FOLDER_ID",
   },
   {
     slug: "optimasi-toko-shopee",
@@ -184,7 +189,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
-    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_OPTIMASI_TOKO_SHOPEE",
+    driveFileId: "REPLACE_OPTIMASI_TOKO_SHOPEE_FOLDER_ID",
   },
   {
     slug: "copywriting-menjual",
@@ -233,7 +238,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
-    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_COPYWRITING_MENJUAL",
+    driveFileId: "18yu1TBy4p1R-p0mjqMK9eWbzYumoQHhc",
   },
   {
     slug: "sem-google-ads",
@@ -282,7 +287,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
-    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_SEM_GOOGLE_ADS",
+    driveFileId: "REPLACE_SEM_GOOGLE_ADS_FOLDER_ID",
   },
   {
     slug: "youtube-marketing",
@@ -331,7 +336,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
-    videoAccessUrl: "https://youtube.com/playlist?list=REPLACE_YOUTUBE_MARKETING",
+    driveFileId: "REPLACE_YOUTUBE_MARKETING_FOLDER_ID",
   },
 ];
 
@@ -360,4 +365,9 @@ export function formatRupiah(value: number): string {
 
 export function discountPercent(price: number, originalPrice: number): number {
   return Math.round(100 - (price / originalPrice) * 100);
+}
+
+/** Builds the Drive folder URL a buyer opens after being granted per-email access. */
+export function getCourseDriveUrl(driveFileId: string): string {
+  return `https://drive.google.com/drive/folders/${driveFileId}`;
 }

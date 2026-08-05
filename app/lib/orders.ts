@@ -13,6 +13,7 @@ export interface Order {
   status: OrderStatus;
   accessToken: string | null;
   accessExpiresAt: string | null;
+  driveAccessRevoked: boolean;
   createdAt: string;
   paidAt: string | null;
 }
@@ -28,6 +29,7 @@ interface OrderRow {
   status: OrderStatus;
   access_token: string | null;
   access_expires_at: string | null;
+  drive_access_revoked: boolean;
   created_at: string;
   paid_at: string | null;
 }
@@ -44,6 +46,7 @@ function fromRow(row: OrderRow): Order {
     status: row.status,
     accessToken: row.access_token,
     accessExpiresAt: row.access_expires_at,
+    driveAccessRevoked: row.drive_access_revoked,
     createdAt: row.created_at,
     paidAt: row.paid_at,
   };
@@ -113,6 +116,47 @@ export async function getOrderByAccessToken(token: string): Promise<Order | null
 export function isAccessExpired(order: Order): boolean {
   if (!order.accessExpiresAt) return false;
   return new Date(order.accessExpiresAt).getTime() < Date.now();
+}
+
+export async function markDriveAccessRevoked(orderId: string): Promise<void> {
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase
+    .from('orders')
+    .update({ drive_access_revoked: true })
+    .eq('order_id', orderId);
+  if (error) throw new Error(`Gagal menandai akses Drive dicabut: ${error.message}`);
+}
+
+/** Paid orders whose access window has passed but haven't had Drive access revoked yet. */
+export async function getExpiredPaidOrdersPendingRevoke(): Promise<Order[]> {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .eq('status', 'paid')
+    .eq('drive_access_revoked', false)
+    .not('access_expires_at', 'is', null)
+    .lt('access_expires_at', new Date().toISOString());
+  if (error) throw new Error(`Gagal mengambil order yang kedaluwarsa: ${error.message}`);
+  return (data ?? []).map((row) => fromRow(row as OrderRow));
+}
+
+export async function recordFailedGrant(input: {
+  orderId: string;
+  customerEmail: string;
+  driveFileId: string;
+  action: 'grant' | 'revoke';
+  errorMessage: string;
+}): Promise<void> {
+  const supabase = getSupabaseAdmin();
+  const { error } = await supabase.from('failed_grants').insert({
+    order_id: input.orderId,
+    customer_email: input.customerEmail,
+    drive_file_id: input.driveFileId,
+    action: input.action,
+    error_message: input.errorMessage,
+  });
+  if (error) throw new Error(`Gagal mencatat failed_grants: ${error.message}`);
 }
 
 export async function logAccess(

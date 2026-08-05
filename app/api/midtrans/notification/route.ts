@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'node:crypto';
-import { getOrderById, updateOrderStatus, markOrderPaid } from '../../../lib/orders';
-import { sendCourseAccessEmail } from '../../../lib/email';
+import { getOrderById, updateOrderStatus, markOrderPaid, recordFailedGrant } from '../../../lib/orders';
+import { sendCourseAccessEmail, sendDriveGrantFailureAlert } from '../../../lib/email';
+import { getCourseBySlug } from '../../../lib/courses';
+import { grantDriveAccess } from '../../../lib/googleDrive';
 
 interface MidtransNotification {
   order_id?: unknown;
@@ -87,6 +89,37 @@ export async function POST(request: NextRequest) {
         courseTitle: order.courseTitle,
         accessToken,
       });
+
+      // Drive access is best-effort here: a failure must not turn into a
+      // non-200 response, or Midtrans will keep retrying this notification
+      // (and the buyer already has status 'paid' + their access-link email).
+      // Failures are logged, persisted to `failed_grants` for manual
+      // follow-up, and best-effort alerted to the admin inbox.
+      const course = getCourseBySlug(order.slug);
+      if (course) {
+        try {
+          await grantDriveAccess(course.driveFileId, order.customerEmail);
+        } catch (grantErr) {
+          const errorMessage = grantErr instanceof Error ? grantErr.message : String(grantErr);
+          console.error(`Gagal memberi akses Drive untuk order ${orderId}:`, grantErr);
+          await recordFailedGrant({
+            orderId,
+            customerEmail: order.customerEmail,
+            driveFileId: course.driveFileId,
+            action: 'grant',
+            errorMessage,
+          }).catch((logErr) => console.error('Gagal mencatat failed_grants:', logErr));
+          await sendDriveGrantFailureAlert({
+            orderId,
+            customerEmail: order.customerEmail,
+            courseTitle: order.courseTitle,
+            action: 'grant',
+            errorMessage,
+          }).catch((alertErr) => console.error('Gagal mengirim alert admin:', alertErr));
+        }
+      } else {
+        console.error(`Midtrans webhook: course untuk slug ${order.slug} tidak ditemukan, akses Drive dilewati.`);
+      }
     } else if (isFailed) {
       await updateOrderStatus(orderId, 'failed');
     }

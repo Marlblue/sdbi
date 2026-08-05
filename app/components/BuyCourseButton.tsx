@@ -28,6 +28,10 @@ const MIDTRANS_CLIENT_KEY = process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? '';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_REGEX = /^(\+62|62|0)8[0-9]{7,11}$/;
+// gmail.com/googlemail.com are guaranteed Google accounts; other domains
+// (e.g. Google Workspace on a custom domain) may also be valid Google
+// accounts, so this only triggers a non-blocking warning, not a hard error.
+const KNOWN_GOOGLE_DOMAINS = ['gmail.com', 'googlemail.com'];
 
 interface BuyCourseButtonProps {
   slug: string;
@@ -45,6 +49,9 @@ export default function BuyCourseButton({ slug, className }: BuyCourseButtonProp
   const emailValid = EMAIL_REGEX.test(email.trim());
   const phoneValid = PHONE_REGEX.test(phone.trim().replace(/[\s-]/g, ''));
   const formValid = nameValid && emailValid && phoneValid;
+
+  const emailDomain = email.trim().split('@')[1]?.toLowerCase() ?? '';
+  const showGoogleAccountWarning = emailValid && !KNOWN_GOOGLE_DOMAINS.includes(emailDomain);
 
   const handleBuy = async () => {
     if (loading) return;
@@ -132,6 +139,13 @@ export default function BuyCourseButton({ slug, className }: BuyCourseButtonProp
         disabled={loading}
         className="w-full mb-3 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5821F] disabled:opacity-60"
       />
+      {showGoogleAccountWarning && (
+        <p className="text-amber-600 text-xs mb-3 -mt-1">
+          ⚠️ Materi kelas diakses lewat Google Drive dan hanya bisa dibuka dari akun Google yang aktif
+          dengan email ini. Jika email ini bukan akun Google (Gmail atau Google Workspace), Anda tidak
+          akan bisa membuka materinya.
+        </p>
+      )}
       <label htmlFor={`phone-${slug}`} className="block text-xs font-bold text-[#6B7280] mb-1.5">
         Nomor WhatsApp
       </label>
