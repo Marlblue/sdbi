@@ -4,6 +4,7 @@ import { getOrderById, updateOrderStatus, markOrderPaid, recordFailedGrant } fro
 import { sendCourseAccessEmail, sendDriveGrantFailureAlert } from '../../../lib/email';
 import { getCourseBySlug } from '../../../lib/courses';
 import { grantDriveAccess } from '../../../lib/googleDrive';
+import { sendFonnteMessage } from '../../../lib/fonnte';
 
 interface MidtransNotification {
   order_id?: unknown;
@@ -89,6 +90,16 @@ export async function POST(request: NextRequest) {
         courseTitle: order.courseTitle,
         accessToken,
       });
+
+      sendFonnteMessage(
+        `*Order E-Course Lunas*\n\n` +
+          `Kelas: ${order.courseTitle}\n` +
+          `Pembeli: ${order.customerName || '-'}\n` +
+          `Email: ${order.customerEmail}\n` +
+          `WhatsApp: ${order.customerPhone || '-'}\n` +
+          `Order ID: ${orderId}\n` +
+          `Nominal: Rp ${order.amount.toLocaleString('id-ID')}`
+      ).catch((err) => console.error(`Gagal mengirim notifikasi Fonnte untuk order ${orderId}:`, err));
 
       // Drive access is best-effort here: a failure must not turn into a
       // non-200 response, or Midtrans will keep retrying this notification

@@ -238,7 +238,7 @@ export const courses: Course[] = [
       },
     ],
     updated: "Juli 2026",
-    driveFileId: "18yu1TBy4p1R-p0mjqMK9eWbzYumoQHhc",
+    driveFileId: "REPLACE_COPYWRITING_MENJUAL_FOLDER_ID",
   },
   {
     slug: "sem-google-ads",
