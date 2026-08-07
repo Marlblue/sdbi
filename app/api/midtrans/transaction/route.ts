@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCourseBySlug } from '../../../lib/courses';
 import { createOrder, updateOrderStatus } from '../../../lib/orders';
+import { getClientIp, isRateLimited } from '../../../lib/rateLimit';
+
+const RATE_LIMIT = 5;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 
 const IS_PRODUCTION = process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION === 'true';
 const SNAP_API_URL = IS_PRODUCTION
@@ -11,6 +15,14 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_REGEX = /^(\+62|62|0)8[0-9]{7,11}$/;
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  if (isRateLimited(`midtrans-transaction:${ip}`, RATE_LIMIT, RATE_LIMIT_WINDOW_MS)) {
+    return NextResponse.json(
+      { error: 'Terlalu banyak percobaan. Silakan coba lagi beberapa menit lagi.' },
+      { status: 429 }
+    );
+  }
+
   const serverKey = process.env.MIDTRANS_SERVER_KEY;
   if (!serverKey) {
     return NextResponse.json({ error: 'Midtrans belum dikonfigurasi.' }, { status: 500 });

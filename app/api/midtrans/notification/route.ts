@@ -84,7 +84,12 @@ export async function POST(request: NextRequest) {
 
     if (isPaid) {
       const accessToken = crypto.randomBytes(24).toString('hex');
-      await markOrderPaid(orderId, accessToken);
+      const didTransition = await markOrderPaid(orderId, accessToken);
+      if (!didTransition) {
+        // Another concurrent notification already flipped this order to paid
+        // (Midtrans retries the same event) — side effects already ran once.
+        return NextResponse.json({ received: true }, { status: 200 });
+      }
       await sendCourseAccessEmail({
         to: order.customerEmail,
         courseTitle: order.courseTitle,

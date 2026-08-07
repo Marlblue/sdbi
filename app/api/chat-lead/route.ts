@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sendFonnteMessage } from '../../lib/fonnte';
+import { getClientIp, isRateLimited } from '../../lib/rateLimit';
 
-const FONNTE_TARGET = process.env.FONNTE_TARGET || '6285211436032';
+const RATE_LIMIT = 5;
+const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;
 
-async function sendFonnteNotification({
+function buildLeadMessage({
   nama,
   phone,
   email,
@@ -16,41 +19,27 @@ async function sendFonnteNotification({
   layanan: string;
   sumber: string;
   page: string;
-}) {
-  const token = process.env.FONNTE_TOKEN;
-  if (!token) {
-    console.error('FONNTE_TOKEN belum diset — notifikasi WhatsApp tidak terkirim.');
-    return;
-  }
-
-  const message =
+}): string {
+  return (
     `*Lead Baru dari Website SDBI*\n\n` +
     `Nama: ${nama}\n` +
     `WhatsApp: ${phone || '-'}\n` +
     `Email: ${email || '-'}\n` +
     `Layanan: ${layanan || '-'}\n` +
     `Sumber: ${sumber || '-'}\n` +
-    `Halaman: ${page || '-'}`;
-
-  try {
-    const res = await fetch('https://api.fonnte.com/send', {
-      method: 'POST',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({ target: FONNTE_TARGET, message }),
-    });
-
-    if (!res.ok) {
-      console.error('Fonnte Error:', res.status, await res.text());
-    }
-  } catch (err) {
-    console.error('Fonnte Fetch Error:', err);
-  }
+    `Halaman: ${page || '-'}`
+  );
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  if (isRateLimited(`chat-lead:${ip}`, RATE_LIMIT, RATE_LIMIT_WINDOW_MS)) {
+    return NextResponse.json(
+      { error: 'Terlalu banyak percobaan. Silakan coba lagi beberapa menit lagi.' },
+      { status: 429 }
+    );
+  }
+
   const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
 
   if (!webhookUrl) {
@@ -77,7 +66,9 @@ export async function POST(request: NextRequest) {
   const sumber = typeof body.sumber === 'string' ? body.sumber : '';
   const page = typeof body.page === 'string' ? body.page : '';
 
-  sendFonnteNotification({ nama, phone, email, layanan, sumber, page });
+  sendFonnteMessage(buildLeadMessage({ nama, phone, email, layanan, sumber, page })).catch((err) =>
+    console.error('Fonnte Fetch Error:', err)
+  );
 
   try {
     const scriptResponse = await fetch(webhookUrl, {

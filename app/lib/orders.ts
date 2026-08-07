@@ -81,13 +81,19 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus): P
   if (error) throw new Error(`Gagal update status order: ${error.message}`);
 }
 
-export async function markOrderPaid(orderId: string, accessToken: string): Promise<void> {
+/**
+ * Marks an order paid, but only if it isn't already — the `.neq('status', 'paid')`
+ * makes this atomic at the DB row level, so two near-simultaneous Midtrans retries
+ * can't both flip the order and both trigger the paid-order side effects (email/WhatsApp).
+ * Returns true only for the call that actually performed the transition.
+ */
+export async function markOrderPaid(orderId: string, accessToken: string): Promise<boolean> {
   const supabase = getSupabaseAdmin();
   const paidAt = new Date();
   const accessExpiresAt = new Date(paidAt);
   accessExpiresAt.setFullYear(accessExpiresAt.getFullYear() + 1);
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('orders')
     .update({
       status: 'paid',
@@ -95,8 +101,11 @@ export async function markOrderPaid(orderId: string, accessToken: string): Promi
       access_token: accessToken,
       access_expires_at: accessExpiresAt.toISOString(),
     })
-    .eq('order_id', orderId);
+    .eq('order_id', orderId)
+    .neq('status', 'paid')
+    .select('order_id');
   if (error) throw new Error(`Gagal menandai order lunas: ${error.message}`);
+  return (data?.length ?? 0) > 0;
 }
 
 export async function getOrderById(orderId: string): Promise<Order | null> {
