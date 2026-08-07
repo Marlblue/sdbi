@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { getAllArticles, getArticlesByTag, formatTanggal } from "../lib/articles";
+import { getPaginatedArticles, getPaginatedArticlesByTag, formatTanggal, ARTICLES_PER_PAGE } from "../lib/articles";
 import StickyHeader from "../components/StickyHeader";
 import Footer from "../components/Footer";
 import AnimateOnScroll from "../components/AnimateOnScroll";
@@ -21,10 +22,25 @@ const categoryColors: Record<string, string> = {
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tag?: string }>;
+  searchParams: Promise<{ tag?: string; page?: string }>;
 }) {
-  const { tag } = await searchParams;
-  const articles = tag ? await getArticlesByTag(tag) : await getAllArticles();
+  const { tag, page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+  const { items: articles, total } = tag
+    ? await getPaginatedArticlesByTag(tag, page)
+    : await getPaginatedArticles(page);
+  const totalPages = Math.max(1, Math.ceil(total / ARTICLES_PER_PAGE));
+  const pageQuery = (p: number) => {
+    const params = new URLSearchParams();
+    if (tag) params.set("tag", tag);
+    if (p > 1) params.set("page", String(p));
+    const qs = params.toString();
+    return qs ? `/blog?${qs}` : "/blog";
+  };
+
+  if (page > totalPages) {
+    redirect(pageQuery(totalPages));
+  }
 
   return (
     <>
@@ -45,7 +61,7 @@ export default async function BlogPage({
           {tag ? (
             <div className="flex items-center flex-wrap gap-3 mb-8">
               <p className="text-sm text-[#6B7280]">
-                Menampilkan {articles.length} artikel dengan tag{" "}
+                Menampilkan {total} artikel dengan tag{" "}
                 <span className="font-semibold text-[#0A1E3F]">#{tag}</span>
               </p>
               <Link
@@ -56,11 +72,11 @@ export default async function BlogPage({
               </Link>
             </div>
           ) : (
-            <p className="text-sm text-[#6B7280] mb-8">{articles.length} artikel</p>
+            <p className="text-sm text-[#6B7280] mb-8">{total} artikel</p>
           )}
           {articles.length === 0 && (
             <p className="text-sm text-[#6B7280] mb-8">
-              Belum ada artikel dengan tag ini.
+              {tag ? "Belum ada artikel dengan tag ini." : "Belum ada artikel."}
             </p>
           )}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -74,6 +90,7 @@ export default async function BlogPage({
                         alt={article.title}
                         fill
                         sizes="(max-width: 768px) 100vw, 33vw"
+                        priority={index === 0}
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <span
@@ -96,6 +113,35 @@ export default async function BlogPage({
               </AnimateOnScroll>
             ))}
           </div>
+          {totalPages > 1 && (
+            <nav className="flex items-center justify-center gap-2 mt-12" aria-label="Pagination">
+              <Link
+                href={pageQuery(page - 1)}
+                aria-disabled={page <= 1}
+                className={`text-sm font-semibold px-4 py-2 rounded-full border transition-colors ${
+                  page <= 1
+                    ? "pointer-events-none opacity-40 border-gray-200 text-[#6B7280]"
+                    : "border-gray-300 text-[#0A1E3F] hover:bg-[#0A1E3F] hover:text-white hover:border-[#0A1E3F]"
+                }`}
+              >
+                Sebelumnya
+              </Link>
+              <span className="text-sm text-[#6B7280] px-2">
+                Halaman {page} dari {totalPages}
+              </span>
+              <Link
+                href={pageQuery(page + 1)}
+                aria-disabled={page >= totalPages}
+                className={`text-sm font-semibold px-4 py-2 rounded-full border transition-colors ${
+                  page >= totalPages
+                    ? "pointer-events-none opacity-40 border-gray-200 text-[#6B7280]"
+                    : "border-gray-300 text-[#0A1E3F] hover:bg-[#0A1E3F] hover:text-white hover:border-[#0A1E3F]"
+                }`}
+              >
+                Berikutnya
+              </Link>
+            </nav>
+          )}
         </div>
       </main>
       <Footer />
