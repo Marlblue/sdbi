@@ -2,13 +2,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { marked } from "marked";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { getAllArticles, getArticleBySlug, formatTanggal, getLatestArticles, type ArticleFaq } from "../lib/articles";
 import StickyHeader from "../components/StickyHeader";
 import Footer from "../components/Footer";
 
+export const revalidate = 3600;
+
+const portableTextComponents: PortableTextComponents = {
+  types: {
+    image: ({ value }) => (
+      <span className="block relative w-full h-64 md:h-96 my-8 rounded-xl overflow-hidden bg-gray-100">
+        <Image
+          src={value.asset.url}
+          alt={value.alt || ""}
+          fill
+          sizes="(max-width: 768px) 100vw, 768px"
+          className="object-cover"
+        />
+      </span>
+    ),
+  },
+};
+
 export async function generateStaticParams() {
-  return getAllArticles().map((article) => ({ slug: article.slug }));
+  const articles = await getAllArticles();
+  return articles.map((article) => ({ slug: article.slug }));
 }
 
 export async function generateMetadata({
@@ -17,7 +36,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug);
   if (!article) return {};
 
   const seo = article.seo || {};
@@ -58,19 +77,22 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
     notFound();
   }
 
-  const related = getAllArticles()
+  const allArticles = await getAllArticles();
+  const related = allArticles
     .filter((a) => a.slug !== article.slug)
     .filter((a) => a.category === article.category)
     .slice(0, 3);
 
   const fallbackRelated =
-    related.length > 0 ? related : getLatestArticles(4).filter((a) => a.slug !== article.slug).slice(0, 3);
+    related.length > 0
+      ? related
+      : (await getLatestArticles(4)).filter((a) => a.slug !== article.slug).slice(0, 3);
 
   return (
     <>
@@ -116,10 +138,9 @@ export default async function ArticlePage({
 
         {/* Content */}
         <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div
-            className="article-content"
-            dangerouslySetInnerHTML={{ __html: marked.parse(article.content, { async: false }) }}
-          />
+          <div className="article-content">
+            <PortableText value={article.content} components={portableTextComponents} />
+          </div>
 
           {article.tags.length > 0 && (
             <div className="mt-10 pt-6 border-t border-gray-200 flex flex-wrap gap-2">

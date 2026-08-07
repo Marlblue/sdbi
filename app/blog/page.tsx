@@ -12,6 +12,8 @@ export const metadata: Metadata = {
     "Kumpulan artikel, insight, dan strategi digital marketing, AI SEO, dan pertumbuhan bisnis dari Sekolah Digital Bisnis Indonesia.",
 };
 
+export const revalidate = 3600;
+
 const categoryColors: Record<string, string> = {
   default: "bg-[#0A1E3F]",
 };
@@ -22,7 +24,7 @@ export default async function BlogPage({
   searchParams: Promise<{ tag?: string }>;
 }) {
   const { tag } = await searchParams;
-  const articles = tag ? getArticlesByTag(tag) : getAllArticles();
+  const articles = tag ? await getArticlesByTag(tag) : await getAllArticles();
 
   return (
     <>

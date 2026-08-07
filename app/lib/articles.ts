@@ -1,4 +1,5 @@
-import articlesData from "./articles-data.json";
+import type { PortableTextBlock } from "@portabletext/react";
+import { sanityFetch } from "@/sanity/lib/fetch";
 
 export type ArticleFaq = {
   question: string;
@@ -18,37 +19,67 @@ export type ArticleSeo = {
   faq?: ArticleFaq[];
 };
 
-export type Article = {
+export type ArticleListItem = {
   slug: string;
   title: string;
   date: string;
   excerpt: string;
-  content: string;
   image: string;
   category: string;
   tags: string[];
   readTime: string;
+};
+
+export type Article = ArticleListItem & {
+  content: PortableTextBlock[];
   seo?: ArticleSeo;
 };
 
-export const articles: Article[] = [...(articlesData.articles as Article[])].sort(
-  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-);
+const LIST_FIELDS = /* groq */ `
+  "slug": slug.current,
+  title,
+  date,
+  excerpt,
+  "image": image.asset->url,
+  "category": coalesce(category, "Uncategorized"),
+  "tags": coalesce(tags, []),
+  "readTime": coalesce(readTime, "5 MENIT BACA"),
+`;
 
-export function getAllArticles(): Article[] {
-  return articles;
+const ALL_ARTICLES_QUERY = /* groq */ `
+  *[_type == "article" && defined(slug.current)] | order(date desc) {
+    ${LIST_FIELDS}
+  }
+`;
+
+const ARTICLE_BY_SLUG_QUERY = /* groq */ `
+  *[_type == "article" && slug.current == $slug][0] {
+    ${LIST_FIELDS}
+    "content": content[]{
+      ...,
+      _type == "image" => { ..., "asset": asset-> }
+    },
+    seo
+  }
+`;
+
+export async function getAllArticles(): Promise<ArticleListItem[]> {
+  return sanityFetch<ArticleListItem[]>(ALL_ARTICLES_QUERY);
 }
 
-export function getArticleBySlug(slug: string): Article | undefined {
-  return articles.find((a) => a.slug === slug);
+export async function getArticleBySlug(slug: string): Promise<Article | undefined> {
+  const article = await sanityFetch<Article | null>(ARTICLE_BY_SLUG_QUERY, { slug });
+  return article ?? undefined;
 }
 
-export function getLatestArticles(count: number): Article[] {
+export async function getLatestArticles(count: number): Promise<ArticleListItem[]> {
+  const articles = await getAllArticles();
   return articles.slice(0, count);
 }
 
-export function getArticlesByTag(tag: string): Article[] {
+export async function getArticlesByTag(tag: string): Promise<ArticleListItem[]> {
   const normalized = tag.trim().toLowerCase();
+  const articles = await getAllArticles();
   return articles.filter((a) => a.tags.some((t) => t.trim().toLowerCase() === normalized));
 }
 

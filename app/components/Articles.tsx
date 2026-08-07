@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { getLatestArticles, formatTanggal } from '../lib/articles';
 import AnimateOnScroll from './AnimateOnScroll';
 
-export default function Articles() {
-  const articles = getLatestArticles(3);
+export default async function Articles() {
+  const articles = await getLatestArticles(3);
 
   return (
     <section className="bg-white py-16 md:py-24" id="artikel">
